@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+}
+div {
+  @apply box-border;
+}
+
+input {
+  @apply rounded-md shadow-md focus:outline-pink-color w-96 p-2 text-center;
+}
+button {
+  @apply rounded-2xl;
+}
+.r-container {
+  @apply flex flex-row justify-between gap-3;
+}
+.c-container {
+  @apply flex flex-col justify-between gap-3;
+}
+.back-drop {
+  @apply fixed top-0 left-0 right-0 bottom-0 bg-black-color bg-opacity-50 z-30;
+}
+
+.btn-menu {
+  @apply rounded-md bg-mineralgrey-color p-2 text-white-color w-[90px] h-[90px] hover:scale-110 duration-300;
+}
+.btn-confirm {
+  @apply bg-white-color rounded-md w-1/2 h-10;
+}
+
+.container {
+  @apply bg-mineralgrey-color p-5 rounded-md;
+}
