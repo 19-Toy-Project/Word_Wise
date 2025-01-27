@@ -2,10 +2,13 @@ package com.wordwise.domain.word.entity;
 
 import com.wordwise.common.enums.WordType;
 import com.wordwise.common.utils.Timestamped;
+import com.wordwise.domain.sentence.entity.Sentence;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -20,6 +23,9 @@ public class Word extends Timestamped {
 
     @Enumerated(EnumType.STRING)
     private WordType type;
+
+    @OneToMany(mappedBy = "word",cascade = CascadeType.REMOVE)
+    private List<Sentence> sentences;
 
     private Word(Long id, String word_en,WordType type){
         this.id=id;
