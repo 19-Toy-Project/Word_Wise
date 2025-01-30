@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class WordController {
     private final WordService wordService;
 
+    //단어 등록
+
     //단어 리스트 조회
     @GetMapping("/v1/words")
     public ApiResponse<Page<GetWordListResponse>> getWordList(

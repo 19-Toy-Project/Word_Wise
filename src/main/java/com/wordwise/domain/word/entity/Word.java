@@ -24,6 +24,9 @@ public class Word extends Timestamped {
     @Enumerated(EnumType.STRING)
     private WordType type;
 
+    @OneToMany(mappedBy = "word", cascade = CascadeType.REMOVE)
+    private List<WordKr> word_krs;
+
     @OneToMany(mappedBy = "word",cascade = CascadeType.REMOVE)
     private List<Sentence> sentences;
 
