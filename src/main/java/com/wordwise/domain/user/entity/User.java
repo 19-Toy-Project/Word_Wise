@@ -5,7 +5,6 @@ import com.wordwise.common.enums.UserRole;
 import com.wordwise.common.enums.UserStatus;
 import com.wordwise.common.enums.UserTier;
 import com.wordwise.common.utils.Timestamped;
-import com.wordwise.common.utils.WordTypeConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
