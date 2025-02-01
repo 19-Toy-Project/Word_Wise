@@ -3,6 +3,7 @@ package com.wordwise.domain.word.entity;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name="word_kr")
 public class WordKr {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -5,10 +5,8 @@ import com.wordwise.domain.word.response.GetWordListResponse;
 import com.wordwise.domain.word.service.WordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -16,8 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class WordController {
     private final WordService wordService;
 
-    //단어 등록
-
+//    //단어 한국어 뜻 등록
+//    @PostMapping("/v1/words/wordkr")
+//    public ResponseEntity<Void> saveWordKr(){
+//        wordService.saveWordKr();
+//        return ResponseEntity.noContent().build();
+//    }
     //단어 리스트 조회
     @GetMapping("/v1/words")
     public ApiResponse<Page<GetWordListResponse>> getWordList(

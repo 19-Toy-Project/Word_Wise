@@ -1,8 +1,9 @@
 
 spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
   application:
     name: wordwise
-
   datasource:
     url: ${LOCAL_DB_URL}
     username: ${LOCAL_DB_USERNAME}
@@ -23,6 +24,16 @@ jwt:
   secret:
     key: ${JWT_SECRET_KEY}
 
+rapid:
+  client:
+    key: ${RAPID_API_KEY}
+
+naver:
+  client:
+    id: ${NAVER_API_ID}
+    key: ${NAVER_API_KEY}
+
 logging:
   level:
     com.devloop.search.service: DEBUG
+
