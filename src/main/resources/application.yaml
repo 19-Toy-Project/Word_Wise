@@ -26,3 +26,10 @@ jwt:
 logging:
   level:
     com.devloop.search.service: DEBUG
+
+kakao:
+  rest:
+    api:
+      key: ${KAKAO_REST_API_KEY}
+  redirect:
+    uri: ${KAKAO_REDIRECT_URI}
