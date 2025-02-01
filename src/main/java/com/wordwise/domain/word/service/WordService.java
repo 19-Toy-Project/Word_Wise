@@ -3,7 +3,6 @@ package com.wordwise.domain.word.service;
 import com.wordwise.common.apipayload.status.ErrorStatus;
 import com.wordwise.common.enums.WordType;
 import com.wordwise.common.exception.ApiException;
-import com.wordwise.domain.sentence.entity.Sentence;
 import com.wordwise.domain.word.entity.Word;
 import com.wordwise.domain.word.repository.WordRepository;
 import com.wordwise.domain.word.response.GetWordDetailResponse;
@@ -26,14 +25,6 @@ public class WordService {
 
     private final WordRepository wordRepository;
 
-//    //단어 뜻 등록 (한국어)
-//    public void saveWordKr(){
-//        //Word 테이블의 모든 단어 조회
-//        List<Word> words=wordRepository.findAll();
-//
-//        //papago API 호출
-//
-//    }
     public Page<GetWordListResponse> getWordList(WordType type,int page, int size){
         PageRequest pageable =PageRequest.of(page-1,size);
 

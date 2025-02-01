@@ -16,12 +16,6 @@ import org.springframework.web.bind.annotation.*;
 public class WordController {
     private final WordService wordService;
 
-//    //단어 한국어 뜻 등록
-//    @PostMapping("/v1/words/wordkr")
-//    public ResponseEntity<Void> saveWordKr(){
-//        wordService.saveWordKr();
-//        return ResponseEntity.noContent().build();
-//    }
     //단어 전체 조회
     @GetMapping("/v1/words")
     public ApiResponse<Page<GetWordListResponse>> getWordList(
