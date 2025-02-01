@@ -21,6 +21,9 @@ public class User extends Timestamped {
     @Column(name="user_id")
     private Long id;
 
+    @Column(name="kakao_id")
+    private Long kakaoId;
+
     @Column(name="user_name")
     private String name;
 
@@ -41,17 +44,26 @@ public class User extends Timestamped {
 
 
     public User(
+            Long kakaoId,
             String name,
             String email
     ) {
+        this.kakaoId = kakaoId;
         this.name = name;
         this.email = email;
     }
 
     public static User of(
+            Long kakaoId,
             String name,
             String email
     ){
-        return new User(name, email);
+        return new User(kakaoId, name, email);
+    }
+
+    // 다른 소셜 로그인 통합 대비
+    public User kakaoIdUpdate(Long kakaoId) {
+        this.kakaoId = kakaoId;
+        return this;
     }
 }
