@@ -4,22 +4,20 @@ package com.wordwise.domain.auth.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.wordwise.common.utils.JwtUtil;
 import com.wordwise.domain.auth.dto.KakaoUserInfoDto;
+import com.wordwise.domain.user.entity.User;
 import com.wordwise.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.net.URI;
 
@@ -27,7 +25,6 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class KakaoService {
 
-    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
     private final JwtUtil jwtUtil;
@@ -45,11 +42,16 @@ public class KakaoService {
         // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
         KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(accessToken);
 
+        // 3. 필요시에 회원가입
+        User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
 
-        return null;
+        // 4. JWT 토큰 반환
+        String createToken = jwtUtil.createToken(kakaoUser.getId(),kakaoUser.getEmail(), kakaoUser.getRole());
+
+        return createToken;
     }
 
-    // "인가 코드"로 "액세스 토큰" 요청
+    // 1. "인가 코드"로 "액세스 토큰" 요청
     private String getToken(String code) throws JsonProcessingException {
         // 요청 URL 만들기
         URI uri = UriComponentsBuilder
@@ -86,7 +88,7 @@ public class KakaoService {
         return jsonNode.get("access_token").asText();
     }
 
-    // "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
+    // 2. "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
     private KakaoUserInfoDto getKakaoUserInfo(String accessToken) throws JsonProcessingException {
         // 요청 URL 만들기
         URI uri = UriComponentsBuilder
@@ -120,6 +122,33 @@ public class KakaoService {
                 .get("email").asText();
 
         return new KakaoUserInfoDto(id, nickname, email);
+    }
+
+    // 3. 필요시에 회원가입
+    private User registerKakaoUserIfNeeded(KakaoUserInfoDto kakaoUserInfo) {
+        // DB 에 중복된 Kakao Id 가 있는지 확인
+        Long kakaoId = kakaoUserInfo.getId();
+        User kakaoUser = userRepository.findByKakaoId(kakaoId).orElse(null);
+
+        if (kakaoUser == null) {
+            // 카카오 사용자 email 동일한 email 가진 회원이 있는지 확인
+            String kakaoEmail = kakaoUserInfo.getEmail();
+            User sameEmailUser = userRepository.findByEmail(kakaoEmail).orElse(null);
+            if (sameEmailUser != null) {
+                kakaoUser = sameEmailUser;
+                // 기존 회원정보에 카카오 Id 추가
+                kakaoUser = kakaoUser.kakaoIdUpdate(kakaoId);
+            } else {
+                // 신규 회원가입
+                // email: kakao email
+                String email = kakaoUserInfo.getEmail();
+
+                kakaoUser = new User(kakaoId, kakaoUserInfo.getNickname(), email);
+            }
+
+            userRepository.save(kakaoUser);
+        }
+        return kakaoUser;
     }
 
 
