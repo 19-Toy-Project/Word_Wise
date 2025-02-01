@@ -1,9 +1,11 @@
 package com.wordwise.domain.word.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
 @Table(name="word_kr")
+@Getter
 public class WordKr {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

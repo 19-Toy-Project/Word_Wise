@@ -4,18 +4,21 @@ import lombok.Getter;
 
 @Getter
 public class GetWordListResponse {
-    private final Long wordId;
-    private final String word_en;
+    private Long wordId;
+    private String word_en;
+    private String type;
 
-    private GetWordListResponse(Long wordId,String word_en){
+    private GetWordListResponse(Long wordId,String word_en,String type){
         this.wordId=wordId;
         this.word_en=word_en;
+        this.type=type;
     }
 
-    public static GetWordListResponse of(Long wordId,String word_en){
+    public static GetWordListResponse of(Long wordId,String word_en,String type){
         return new GetWordListResponse(
                 wordId,
-                word_en
+                word_en,
+                type
         );
     }
 }

@@ -1,6 +1,8 @@
 package com.wordwise.domain.word.controller;
 
 import com.wordwise.common.apipayload.ApiResponse;
+import com.wordwise.common.enums.WordType;
+import com.wordwise.domain.word.response.GetWordDetailResponse;
 import com.wordwise.domain.word.response.GetWordListResponse;
 import com.wordwise.domain.word.service.WordService;
 import lombok.RequiredArgsConstructor;
@@ -20,13 +22,21 @@ public class WordController {
 //        wordService.saveWordKr();
 //        return ResponseEntity.noContent().build();
 //    }
-    //단어 리스트 조회
+    //단어 전체 조회
     @GetMapping("/v1/words")
     public ApiResponse<Page<GetWordListResponse>> getWordList(
-        @RequestParam(defaultValue = "1") int page,
-        @RequestParam(defaultValue = "10") int size
+            @RequestParam(required = false) WordType type,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
     ){
-        return ApiResponse.ok(wordService.getWordList(page,size));
+        return ApiResponse.ok(wordService.getWordList(type,page,size));
     }
 
+    //단어 상세 조회
+    @GetMapping("/v1/words/{wordId}")
+    public ApiResponse<GetWordDetailResponse> getWord(
+            @PathVariable Long wordId
+    ){
+        return ApiResponse.ok(wordService.getWord(wordId));
+    }
 }

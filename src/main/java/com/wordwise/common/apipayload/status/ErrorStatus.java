@@ -18,6 +18,7 @@ public enum ErrorStatus implements BaseCode {
 
     // word
     _WORD_TYPE_CODE_NOT_FOUND(HttpStatus.NOT_FOUND, "404", "존재하지 않는 타입 코드 입니다."),
+    _NOT_FOUND_WORD(HttpStatus.NOT_FOUND, "404", "존재하지 않는 단어 입니다."),
 
     // common
     _INVALID_REQUEST(HttpStatus.NOT_FOUND, "404", "잘못된 요청입니다."),

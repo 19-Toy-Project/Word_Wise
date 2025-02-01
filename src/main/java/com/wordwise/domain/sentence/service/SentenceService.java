@@ -1,5 +1,7 @@
 package com.wordwise.domain.sentence.service;
 
+import com.wordwise.domain.sentence.entity.Sentence;
+import com.wordwise.domain.sentence.repository.SentenceRepository;
 import com.wordwise.domain.sentence.response.PapagoApiRequest;
 import com.wordwise.domain.sentence.response.PapagoApiResponse;
 import com.wordwise.domain.sentence.response.WordsApiResponse;
@@ -16,6 +18,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class SentenceService {
+    private final SentenceRepository sentenceRepository;
     private final WordRepository wordRepository;
     private final WordsApiClient wordsApiClient;
     private final PapagoApiClient papagoApiClient;
@@ -31,7 +34,7 @@ public class SentenceService {
 
 
     //예문 등록
-    public void saveSentence(){
+    public String saveSentence(){
         //모든 단어 가져오기
         List<Word> words=wordRepository.findAll();
 
@@ -42,21 +45,20 @@ public class SentenceService {
             //예문 리스트 응답 데이터 (예문 개수 제한 없음)
             List<String> sentences=response.getExamples();
 
-            log.info("word={}",response.getWord());
-            for(String sentence:sentences){
-                log.info("sentence={}",sentence);
+            for(String sentence_en:sentences){
                 //각 예문을 PapagoAPI 호출
-                PapagoApiRequest request=PapagoApiRequest.of("en","ko",sentence);
+                PapagoApiRequest request=PapagoApiRequest.of("en","ko",sentence_en);
                 PapagoApiResponse papagoApiResponse=papagoApiClient.getTranslation(clientId,clientKey,request);
+
                 //각 예문의 뜻
-                String meaning=papagoApiResponse.getMessage().getResult().getTranslatedText();
+                String sentence_kr=papagoApiResponse.getMessage().getResult().getTranslatedText();
 
-
-                log.info("meaning={}",meaning);
-
+                //새로운 문장 객체 생성
+                Sentence newSentence=Sentence.of(sentence_en,sentence_kr,word);
+                sentenceRepository.save(newSentence);
             }
 
         }
-
+        return String.format("예문이 저장되었습니다");
     }
 }
