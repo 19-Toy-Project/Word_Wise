@@ -1,6 +1,7 @@
 spring:
   application:
     name: wordwise
+
   datasource:
     url: ${LOCAL_DB_URL}
     username: ${LOCAL_DB_USERNAME}
@@ -34,3 +35,9 @@ logging:
   level:
     com.devloop.search.service: DEBUG
 
+kakao:
+  rest:
+    api:
+      key: ${KAKAO_REST_API_KEY}
+  redirect:
+    uri: ${KAKAO_REDIRECT_URI}

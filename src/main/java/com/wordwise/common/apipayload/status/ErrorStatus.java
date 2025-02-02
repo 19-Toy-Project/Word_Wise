@@ -15,6 +15,7 @@ public enum ErrorStatus implements BaseCode {
     _USER_STATUS_NOT_FOUND(HttpStatus.NOT_FOUND, "404", "존재하지 않는 계정 상태 입니다."),
     _USER_LOGIN_TYPE_NOT_FOUND(HttpStatus.NOT_FOUND, "404", "존재하지 않는 로그인 타입 입니다."),
     _USER_TIER_NOT_FOUND(HttpStatus.NOT_FOUND, "404", "해당 티어를 찾을 수 없습니다."),
+    _USER_NOT_FOUND(HttpStatus.NOT_FOUND, "404", "해당 사용자를 찾을 수 없습니다."),
 
     // word
     _WORD_TYPE_CODE_NOT_FOUND(HttpStatus.NOT_FOUND, "404", "존재하지 않는 타입 코드 입니다."),
