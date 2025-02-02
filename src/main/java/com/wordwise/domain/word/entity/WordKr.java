@@ -2,10 +2,12 @@ package com.wordwise.domain.word.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="word_kr")
+@Table(name = "word_kr")
 @Getter
+@NoArgsConstructor
 public class WordKr {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,6 +17,6 @@ public class WordKr {
     private String word_kr;
 
     @ManyToOne
-    @JoinColumn(name="word_id",nullable = false)
+    @JoinColumn(name = "word_id", nullable = false)
     private Word word;
 }

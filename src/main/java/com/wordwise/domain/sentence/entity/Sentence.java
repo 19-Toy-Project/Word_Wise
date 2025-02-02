@@ -3,12 +3,13 @@ package com.wordwise.domain.sentence.entity;
 import com.wordwise.common.utils.Timestamped;
 import com.wordwise.domain.word.entity.Word;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Sentence extends Timestamped {
 
     @Id

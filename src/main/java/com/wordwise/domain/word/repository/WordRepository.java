@@ -10,5 +10,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface WordRepository extends JpaRepository<Word,Long> {
     Page<Word> findAll(Pageable pageable);
 
-    Page<Word> findByTypeContaining(WordType type, PageRequest pageable);
+    Page<Word> findByType(WordType type, PageRequest pageable);
 }

@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
 
 @Slf4j
@@ -33,32 +34,42 @@ public class SentenceService {
     private String clientKey;
 
 
-    //예문 등록
-    public String saveSentence(){
+    //영어 단어 문장 등록
+    public void saveSentence() {
         //모든 단어 가져오기
-        List<Word> words=wordRepository.findAll();
+        List<Word> words = wordRepository.findAll();
 
         //각 단어를 WordsAPI 호출
-        for(Word word: words){
-            WordsApiResponse response=wordsApiClient.getSentences(rapidApiKey,word.getWord_en());
+        for (Word word : words) {
+            WordsApiResponse response = wordsApiClient.getSentences(rapidApiKey, word.getWord_en());
 
             //예문 리스트 응답 데이터 (예문 개수 제한 없음)
-            List<String> sentences=response.getExamples();
+            List<String> sentences = response.getExamples();
 
-            for(String sentence_en:sentences){
+            for (String sentence_en : sentences) {
                 //각 예문을 PapagoAPI 호출
-                PapagoApiRequest request=PapagoApiRequest.of("en","ko",sentence_en);
-                PapagoApiResponse papagoApiResponse=papagoApiClient.getTranslation(clientId,clientKey,request);
+                PapagoApiRequest request = PapagoApiRequest.of("en", "ko", sentence_en);
+                PapagoApiResponse papagoApiResponse = papagoApiClient.getTranslation(clientId, clientKey, request);
 
                 //각 예문의 뜻
-                String sentence_kr=papagoApiResponse.getMessage().getResult().getTranslatedText();
+                String sentence_kr = papagoApiResponse.getMessage().getResult().getTranslatedText();
 
                 //새로운 문장 객체 생성
-                Sentence newSentence=Sentence.of(sentence_en,sentence_kr,word);
+                Sentence newSentence = Sentence.of(sentence_en, sentence_kr, word);
                 sentenceRepository.save(newSentence);
             }
 
         }
-        return String.format("예문이 저장되었습니다");
     }
+
+    //영어 문장 찜
+    public void saveWish(Long sentenceId){
+
+    }
+
+//    //영어 문장 점수 저장
+//    public SaveSentenceScoreResponse saveSentenceScore(Long sentenceId, MultipartFile file){
+//
+//
+//    }
 }

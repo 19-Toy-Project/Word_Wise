@@ -12,13 +12,13 @@ public class PapagoApiResponse {
 
     @Getter
     @AllArgsConstructor
-    public static class Message{
+    public static class Message {
         private Result result;
     }
 
     @Getter
     @AllArgsConstructor
-    public static class Result{
+    public static class Result {
         private String srcLangType;
         private String tarLangType;
         private String translatedText;

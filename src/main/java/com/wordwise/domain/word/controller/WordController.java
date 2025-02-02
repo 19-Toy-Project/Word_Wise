@@ -7,7 +7,6 @@ import com.wordwise.domain.word.response.GetWordListResponse;
 import com.wordwise.domain.word.service.WordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -22,15 +21,15 @@ public class WordController {
             @RequestParam(required = false) WordType type,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
-    ){
-        return ApiResponse.ok(wordService.getWordList(type,page,size));
+    ) {
+        return ApiResponse.ok(wordService.getWordList(type, page, size));
     }
 
     //단어 상세 조회
     @GetMapping("/v1/words/{wordId}")
     public ApiResponse<GetWordDetailResponse> getWord(
             @PathVariable Long wordId
-    ){
+    ) {
         return ApiResponse.ok(wordService.getWord(wordId));
     }
 }

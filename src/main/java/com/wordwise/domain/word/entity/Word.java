@@ -18,22 +18,22 @@ public class Word extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 255,nullable = false)
+    @Column(length = 255, nullable = false)
     private String word_en;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private WordType type;
 
     @OneToMany(mappedBy = "word", cascade = CascadeType.REMOVE)
     private List<WordKr> word_krs;
 
-    @OneToMany(mappedBy = "word",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "word", cascade = CascadeType.REMOVE)
     private List<Sentence> sentences;
 
-    private Word(Long id, String word_en,WordType type){
-        this.id=id;
-        this.word_en=word_en;
-        this.type=type;
+    private Word(Long id, String word_en, WordType type) {
+        this.id = id;
+        this.word_en = word_en;
+        this.type = type;
     }
 
 }
