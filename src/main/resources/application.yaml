@@ -1,4 +1,3 @@
-
 spring:
   application:
     name: wordwise
@@ -22,6 +21,15 @@ spring:
 jwt:
   secret:
     key: ${JWT_SECRET_KEY}
+
+rapid:
+  client:
+    key: ${RAPID_API_KEY}
+
+naver:
+  client:
+    id: ${NAVER_API_ID}
+    key: ${NAVER_API_KEY}
 
 logging:
   level:
