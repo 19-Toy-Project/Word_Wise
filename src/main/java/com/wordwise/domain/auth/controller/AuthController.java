@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.wordwise.common.apipayload.ApiResponse;
 import com.wordwise.domain.auth.AuthUser;
 import com.wordwise.domain.auth.request.KakaoUserDeleteRequest;
+import com.wordwise.domain.auth.request.LoginRequest;
 import com.wordwise.domain.auth.service.KakaoService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +20,22 @@ public class AuthController {
 
     private final KakaoService kakaoService;
 
+    // 카카오 인가코드 처리 API (로그인) : *** BackEnd TEST 용 ***
+    @GetMapping("/v1/auth/kakao/logintest")
+    @PreAuthorize("permitAll()")
+    public ApiResponse<String> kakaoLoginTest(
+            @RequestParam String code,
+            HttpServletResponse response
+    ) throws JsonProcessingException {
+        // code: 카카오 서버로부터 받은 인가 코드 Service 전달 후 인증 처리 및 JWT 반환
+        return ApiResponse.ok(kakaoService.kakaoLoginTest(code));
+    }
+
     // 카카오 인가코드 처리 API (로그인)
-    @GetMapping("/v1/auth/kakao/login")
+    @PostMapping("/v1/auth/kakao/login")
     @PreAuthorize("permitAll()")
     public ApiResponse<String> kakaoLogin(
-            @RequestParam String code,
+            @RequestBody LoginRequest code,
             HttpServletResponse response
     ) throws JsonProcessingException {
         // code: 카카오 서버로부터 받은 인가 코드 Service 전달 후 인증 처리 및 JWT 반환
