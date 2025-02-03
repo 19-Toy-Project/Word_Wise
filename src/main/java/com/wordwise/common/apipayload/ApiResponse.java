@@ -16,7 +16,7 @@ public class ApiResponse<T> {
     @JsonProperty("success")
     private final Boolean success;
 
-    private final String statusCode;
+    private final Integer statusCode;
 
     private final String message;
 

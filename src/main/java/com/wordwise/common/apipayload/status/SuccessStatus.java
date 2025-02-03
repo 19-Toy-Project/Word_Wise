@@ -10,10 +10,10 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum SuccessStatus implements BaseCode {
 
-    _OK(HttpStatus.OK, "200", "Ok");
+    _OK(HttpStatus.OK, HttpStatus.OK.value(), "Ok");
 
     private final HttpStatus httpStatus;
-    private final String statusCode;
+    private final Integer statusCode;
     private final String message;
 
     @Override

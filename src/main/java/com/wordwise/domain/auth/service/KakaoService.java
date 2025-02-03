@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordwise.common.utils.JwtUtil;
 import com.wordwise.domain.auth.dto.KakaoUserInfoDto;
+import com.wordwise.domain.auth.request.LoginRequest;
 import com.wordwise.domain.user.entity.User;
 import com.wordwise.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +36,27 @@ public class KakaoService {
     @Value("${kakao.redirect.uri}")
     private String redirectUri;
 
-    public String kakaoLogin(String code) throws JsonProcessingException {
+    // BackEnd Login Test 용
+    public String kakaoLoginTest(String code) throws JsonProcessingException {
         // 1. "인가 코드"로 "액세스 토큰" 요청
         String accessToken = getToken(code);
+
+        // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
+        KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(accessToken);
+
+        // 3. 필요시에 회원가입
+        User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
+
+        // 4. JWT 토큰 반환
+        String createToken = jwtUtil.createToken(kakaoUser.getId(),kakaoUser.getEmail(), kakaoUser.getRole());
+
+        return createToken;
+    }
+
+    // 실제 Login 서비스 용
+    public String kakaoLogin(LoginRequest code) throws JsonProcessingException {
+        // 1. "인가 코드"로 "액세스 토큰" 요청
+        String accessToken = getToken(code.getCode());
 
         // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
         KakaoUserInfoDto kakaoUserInfo = getKakaoUserInfo(accessToken);
