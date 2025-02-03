@@ -32,11 +32,10 @@ public class AuthController {
     }
 
     // 카카오 인가코드 처리 API (로그인)
-    @PostMapping("/v1/auth/kakao/login")
+    @PostMapping(value = "/v1/auth/kakao/login", consumes = "application/json; charset=UTF-8")
     @PreAuthorize("permitAll()")
     public ApiResponse<String> kakaoLogin(
-            @RequestBody LoginRequest code,
-            HttpServletResponse response
+            @RequestBody LoginRequest code
     ) throws JsonProcessingException {
         // code: 카카오 서버로부터 받은 인가 코드 Service 전달 후 인증 처리 및 JWT 반환
         return ApiResponse.ok(kakaoService.kakaoLogin(code));
