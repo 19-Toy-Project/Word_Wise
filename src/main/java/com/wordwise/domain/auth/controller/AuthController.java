@@ -20,7 +20,7 @@ public class AuthController {
     private final KakaoService kakaoService;
 
     // 카카오 인가코드 처리 API (로그인)
-    @GetMapping("/v1/auth/kakao/callback")
+    @GetMapping("/v1/auth/kakao/login")
     @PreAuthorize("permitAll()")
     public ApiResponse<String> kakaoLogin(
             @RequestParam String code,
@@ -30,6 +30,7 @@ public class AuthController {
         return ApiResponse.ok(kakaoService.kakaoLogin(code));
     }
 
+    // 카카오 로그아웃
     @GetMapping("/v1/auth/kakao/logout")
     public ApiResponse<String> kakaoLogout(@AuthenticationPrincipal AuthUser authUser) {
         return ApiResponse.ok("로그아웃 완료");
