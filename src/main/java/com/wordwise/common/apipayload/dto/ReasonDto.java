@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 @Builder
 @RequiredArgsConstructor
 public class ReasonDto {
-    private final String statusCode;
+    private final Integer statusCode;
     private final String message;
     private final HttpStatus httpStatus;
     private final Boolean success;
