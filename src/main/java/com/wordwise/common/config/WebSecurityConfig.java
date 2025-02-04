@@ -39,8 +39,8 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/",
-                                "api/v1/auth/kakao/logintest",
-                                "api/v1/auth/kakao/login",
+                                "/api/v1/auth/kakao/logintest",
+                                "/api/v1/auth/kakao/login",
                                 "/api/v1/auth/kakao"
                         )
                         .permitAll()
