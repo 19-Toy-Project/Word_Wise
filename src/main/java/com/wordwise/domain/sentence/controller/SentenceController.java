@@ -1,9 +1,11 @@
 package com.wordwise.domain.sentence.controller;
 
 import com.wordwise.common.apipayload.ApiResponse;
+import com.wordwise.domain.sentence.response.SaveSentenceScoreResponse;
 import com.wordwise.domain.sentence.service.SentenceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,12 +30,12 @@ public class SentenceController {
         return ApiResponse.success();
     }
 
-//    //문장 녹음 점수 저장
-//    @PostMapping("/v1/sentences/record/{sentenceId}")
-//    public ApiResponse<SaveSentenceScoreResponse> saveSentenceScore(
-//            @PathVariable Long sentenceId,
-//            @RequestParam(value = "file") MultipartFile multipartFile
-//    ){
-//        return ApiResponse.ok(sentenceService.saveSentenceScore(sentenceId,multipartFile));
-//    }
+    //문장 녹음 점수 저장
+    @PostMapping("/v1/sentences/record/{sentenceId}")
+    public ApiResponse<SaveSentenceScoreResponse> saveSentenceScore(
+            @PathVariable Long sentenceId,
+            @RequestParam(value = "file") MultipartFile multipartFile
+    ){
+        return ApiResponse.ok(sentenceService.saveSentenceScore(sentenceId,multipartFile));
+    }
 }

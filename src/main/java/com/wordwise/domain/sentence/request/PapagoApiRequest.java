@@ -1,4 +1,4 @@
-package com.wordwise.domain.sentence.response;
+package com.wordwise.domain.sentence.request;
 
 import lombok.Getter;
 

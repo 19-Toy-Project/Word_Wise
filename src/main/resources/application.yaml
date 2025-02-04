@@ -31,6 +31,10 @@ naver:
     id: ${NAVER_API_ID}
     key: ${NAVER_API_KEY}
 
+etri:
+  client:
+    key: ${ETRI_API_KEY}
+
 logging:
   level:
     com.devloop.search.service: DEBUG
