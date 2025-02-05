@@ -2,14 +2,16 @@ package com.wordwise.domain.sentence.response;
 
 import lombok.Getter;
 
+import java.math.BigDecimal;
+
 @Getter
 public class SaveSentenceScoreResponse {
-    private final Double score;
+    private final BigDecimal score;
 
-    private SaveSentenceScoreResponse(Double score){
+    private SaveSentenceScoreResponse(BigDecimal score){
         this.score=score;
     }
-    public static SaveSentenceScoreResponse of(Double score){
+    public static SaveSentenceScoreResponse of(BigDecimal score){
         return new SaveSentenceScoreResponse(score);
     }
 }

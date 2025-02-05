@@ -25,6 +25,7 @@ public class WordService {
 
     private final WordRepository wordRepository;
 
+    //단어 리스트 조회
     public Page<GetWordListResponse> getWordList(WordType type, int page, int size) {
         PageRequest pageable = PageRequest.of(page - 1, size);
 
