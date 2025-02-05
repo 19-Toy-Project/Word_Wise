@@ -89,13 +89,17 @@ public class SentenceService {
             //녹음 파일 base64로 인코딩
             String base64Data= FileUtil.encodeFileToBase64(file);
 
+            log.info("base64Data={}",base64Data);
+
             //Etri 발음 API 호출
-            EtriApiRequest.Argument argument= EtriApiRequest.Argument.of("english",sentence.getSentence_kr(),base64Data);
+            EtriApiRequest.Argument argument= EtriApiRequest.Argument.of("english",sentence.getSentence_en(),base64Data);
             EtriApiRequest request=EtriApiRequest.of(argument);
             EtriApiResponse etriApiResponse=etriApiClient.getPronunciationScore(etriClientKey,request);
 
             //발음 점수 객체 생성 및 저장
+
             return SaveSentenceScoreResponse.of(Double.parseDouble(etriApiResponse.getReturn_object().getScore()));
+
         }catch(IOException e){
             throw new ApiException(ErrorStatus._READ_FILE_ERROR);
         }
