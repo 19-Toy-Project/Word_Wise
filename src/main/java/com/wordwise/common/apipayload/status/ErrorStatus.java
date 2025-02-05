@@ -21,6 +21,10 @@ public enum ErrorStatus implements BaseCode {
     _WORD_TYPE_CODE_NOT_FOUND(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(), "존재하지 않는 타입 코드 입니다."),
     _NOT_FOUND_WORD(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(), "존재하지 않는 단어 입니다."),
 
+    //sentence
+    _NOT_FOUND_SENTENCE(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(), "존재하지 않는 문장 입니다."),
+    _READ_FILE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,HttpStatus.INTERNAL_SERVER_ERROR.value(),"파일을 읽는 중 서버 오류가 발생했습니다."),
+
     // common
     _INVALID_REQUEST(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(), "잘못된 요청입니다."),
     _PERMISSION_DENIED(HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.value(), "권한이 없습니다.");

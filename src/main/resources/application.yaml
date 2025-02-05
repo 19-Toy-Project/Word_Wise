@@ -11,7 +11,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -30,6 +30,10 @@ naver:
   client:
     id: ${NAVER_API_ID}
     key: ${NAVER_API_KEY}
+
+etri:
+  client:
+    key: ${ETRI_API_KEY}
 
 logging:
   level:
