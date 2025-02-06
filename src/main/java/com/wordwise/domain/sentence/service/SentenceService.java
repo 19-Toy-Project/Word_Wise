@@ -94,6 +94,7 @@ public class SentenceService {
     public SaveSentenceScoreResponse saveSentenceScore(AuthUser authUser,Long sentenceId, MultipartFile file) {
 
         try{
+
             //문장 DB에서 문장 가져오기
             Sentence sentence=sentenceRepository.findById(sentenceId).orElseThrow(()->
                     new ApiException(ErrorStatus._NOT_FOUND_SENTENCE));
