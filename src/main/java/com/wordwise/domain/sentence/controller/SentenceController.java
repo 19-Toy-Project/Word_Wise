@@ -9,7 +9,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -31,6 +30,16 @@ public class SentenceController {
             @PathVariable Long sentenceId
     ){
         sentenceService.saveWish(authUser,sentenceId);
+        return ApiResponse.success();
+    }
+
+    //문장 찜 해제
+    @PostMapping("/v1/sentences/wish/{sentenceId}/cancel")
+    public ApiResponse<Void> cancelWish(
+            @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable Long sentenceId
+    ){
+        sentenceService.cancelWish(authUser,sentenceId);
         return ApiResponse.success();
     }
 
