@@ -100,6 +100,19 @@ public class SentenceService {
         wishRepository.save(newWish);
     }
 
+    //영어 문장 찜 해제
+    public void cancelWish(AuthUser authUser, Long sentenceId){
+        //사용자 가져오기
+        User user=userRepository.findById(authUser.getId()).orElseThrow(()->
+                new ApiException(ErrorStatus._USER_NOT_FOUND));
+
+        //문장 가져오기
+        Sentence sentence=sentenceRepository.findById(sentenceId).orElseThrow(()->
+                new ApiException(ErrorStatus._NOT_FOUND_SENTENCE));
+
+
+    }
+
     //영어 문장 점수 저장
     @Transactional
     public SaveSentenceScoreResponse saveSentenceScore(AuthUser authUser,Long sentenceId, MultipartFile file) {
