@@ -13,7 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:3000")
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -33,7 +33,7 @@ public class AuthController {
     }
 
     // 카카오 인가코드 처리 API (로그인)
-    @PostMapping(value = "/v1/auth/kakao/login", consumes = "application/json; charset=UTF-8")
+    @PostMapping(value = "/v1/auth/kakao/login")
     @PreAuthorize("permitAll()")
     public ApiResponse<String> kakaoLogin(
             @RequestBody LoginRequest code,
