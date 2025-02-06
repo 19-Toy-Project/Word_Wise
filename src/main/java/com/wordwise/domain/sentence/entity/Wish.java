@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@Table(name="sentence_wish")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Wish {
 
@@ -23,12 +24,11 @@ public class Wish {
     @JoinColumn(name="sentence_id",nullable = false)
     private Sentence sentence;
 
-    private Wish(Long id,User user,Sentence sentence){
-        this.id=id;
+    private Wish(User user,Sentence sentence){
         this.user=user;
         this.sentence=sentence;
     }
-    public static Wish of(Long id,User user,Sentence sentence){
-        return new Wish(id,user,sentence);
+    public static Wish of(User user,Sentence sentence){
+        return new Wish(user,sentence);
     }
 }

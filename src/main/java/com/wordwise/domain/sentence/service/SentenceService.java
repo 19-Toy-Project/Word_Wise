@@ -6,8 +6,10 @@ import com.wordwise.common.utils.FileUtil;
 import com.wordwise.domain.auth.AuthUser;
 import com.wordwise.domain.sentence.entity.Score;
 import com.wordwise.domain.sentence.entity.Sentence;
+import com.wordwise.domain.sentence.entity.Wish;
 import com.wordwise.domain.sentence.repository.ScoreRepository;
 import com.wordwise.domain.sentence.repository.SentenceRepository;
+import com.wordwise.domain.sentence.repository.WishRepository;
 import com.wordwise.domain.sentence.request.EtriApiRequest;
 import com.wordwise.domain.sentence.request.PapagoApiRequest;
 import com.wordwise.domain.sentence.response.EtriApiResponse;
@@ -22,7 +24,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,6 +43,7 @@ public class SentenceService {
     private final EtriApiClient etriApiClient;
     private final UserRepository userRepository;
     private final ScoreRepository scoreRepository;
+    private final WishRepository wishRepository;
 
     @Value("${rapid.client.key}")
     private String rapidClientKey;
@@ -86,7 +88,16 @@ public class SentenceService {
 
     //영어 문장 찜
     public void saveWish(AuthUser authUser, Long sentenceId){
+        //사용자 가져오기
+        User user=userRepository.findById(authUser.getId()).orElseThrow(()->
+                new ApiException(ErrorStatus._USER_NOT_FOUND));
 
+        //문장 가져오기
+        Sentence sentence=sentenceRepository.findById(sentenceId).orElseThrow(()->
+                new ApiException(ErrorStatus._NOT_FOUND_SENTENCE));
+
+        Wish newWish=Wish.of(user,sentence);
+        wishRepository.save(newWish);
     }
 
     //영어 문장 점수 저장
@@ -94,6 +105,7 @@ public class SentenceService {
     public SaveSentenceScoreResponse saveSentenceScore(AuthUser authUser,Long sentenceId, MultipartFile file) {
 
         try{
+            //파일 유효한지 확인
 
             //문장 DB에서 문장 가져오기
             Sentence sentence=sentenceRepository.findById(sentenceId).orElseThrow(()->
