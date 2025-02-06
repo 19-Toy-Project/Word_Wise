@@ -33,7 +33,7 @@ public class WebSecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtSecurityFilter, SecurityContextHolderAwareRequestFilter.class)
                 .formLogin(form -> form.disable())
-//                .anonymous(anonymous -> anonymous.disable())  // payment 프론트 테스트 위해 익명 접근 가동하도록 주석처리 하겠습니다.
+                .anonymous(anonymous -> anonymous.disable())
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .logout(logout -> logout.disable())
                 .authorizeHttpRequests(auth -> auth
@@ -51,6 +51,7 @@ public class WebSecurityConfig {
                         .hasAuthority(UserRole.Authority.ADMIN)
                         .anyRequest().authenticated()
                 )
+                .cors(cors -> cors.configurationSource(CorsConfig.corsConfigurationSource()))   // CORS 설정 적용
                 .build();
     }
 }
