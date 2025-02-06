@@ -1,6 +1,6 @@
 package com.wordwise.domain.sentence.service;
 
-import com.wordwise.domain.sentence.response.PapagoApiRequest;
+import com.wordwise.domain.sentence.request.PapagoApiRequest;
 import com.wordwise.domain.sentence.response.PapagoApiResponse;
 import feign.Headers;
 import org.springframework.cloud.openfeign.FeignClient;
