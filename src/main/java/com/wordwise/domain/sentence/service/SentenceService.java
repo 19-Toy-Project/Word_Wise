@@ -110,7 +110,14 @@ public class SentenceService {
         Sentence sentence=sentenceRepository.findById(sentenceId).orElseThrow(()->
                 new ApiException(ErrorStatus._NOT_FOUND_SENTENCE));
 
+        //문장 찜이 존재하는 지 확인
+        Wish wish=wishRepository.findBySentenceIdAndUserId(sentence.getId(),user.getId());
 
+        if(wish==null){
+           throw new ApiException(ErrorStatus._NOT_FOUND_WISH);
+        }else{
+            wishRepository.delete(wish);
+        }
     }
 
     //영어 문장 점수 저장
