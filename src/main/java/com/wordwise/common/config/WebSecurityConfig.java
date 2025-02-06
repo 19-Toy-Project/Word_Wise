@@ -42,7 +42,7 @@ public class WebSecurityConfig {
                                 "/api/v1/auth/kakao/logintest",
                                 "/api/v1/auth/kakao/login",
                                 "/api/v1/auth/kakao",
-                                "/api/v1/words"
+                                "/api/v1/words/**"
                         )
                         .permitAll()
                         .requestMatchers(
