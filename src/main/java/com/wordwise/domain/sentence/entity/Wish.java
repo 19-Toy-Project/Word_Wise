@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name="sentence_wish")
+@Table(name = "sentence_wish")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Wish {
 
@@ -17,18 +17,19 @@ public class Wish {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="user_id",nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="sentence_id",nullable = false)
+    @JoinColumn(name = "sentence_id", nullable = false)
     private Sentence sentence;
 
-    private Wish(User user,Sentence sentence){
-        this.user=user;
-        this.sentence=sentence;
+    private Wish(User user, Sentence sentence) {
+        this.user = user;
+        this.sentence = sentence;
     }
-    public static Wish of(User user,Sentence sentence){
-        return new Wish(user,sentence);
+
+    public static Wish of(User user, Sentence sentence) {
+        return new Wish(user, sentence);
     }
 }

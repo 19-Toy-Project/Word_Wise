@@ -27,7 +27,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
@@ -87,72 +86,79 @@ public class SentenceService {
     }
 
     //영어 문장 찜
-    public void saveWish(AuthUser authUser, Long sentenceId){
+    @Transactional
+    public void saveWish(AuthUser authUser, Long sentenceId, Boolean state) {
         //사용자 가져오기
-        User user=userRepository.findById(authUser.getId()).orElseThrow(()->
+        User user = userRepository.findById(authUser.getId()).orElseThrow(() ->
                 new ApiException(ErrorStatus._USER_NOT_FOUND));
 
         //문장 가져오기
-        Sentence sentence=sentenceRepository.findById(sentenceId).orElseThrow(()->
+        Sentence sentence = sentenceRepository.findById(sentenceId).orElseThrow(() ->
                 new ApiException(ErrorStatus._NOT_FOUND_SENTENCE));
 
-        Wish newWish=Wish.of(user,sentence);
-        wishRepository.save(newWish);
-    }
+        //찜 안한 상태
+        if (state) {
+            //문장 찜이 존재하는 지 확인
+            Wish wish = wishRepository.findBySentenceIdAndUserId(sentence.getId(), user.getId());
 
-    //영어 문장 찜 해제
-    public void cancelWish(AuthUser authUser, Long sentenceId){
-        //사용자 가져오기
-        User user=userRepository.findById(authUser.getId()).orElseThrow(()->
-                new ApiException(ErrorStatus._USER_NOT_FOUND));
+            if (wish == null) {
+                Wish newWish = Wish.of(user, sentence);
+                wishRepository.save(newWish);
+            } else {
+                throw new ApiException(ErrorStatus._FOUND_WISH);
+            }
+        } else { //찜한 상태
+            //문장 찜이 존재하는 지 확인
+            Wish wish = wishRepository.findBySentenceIdAndUserId(sentence.getId(), user.getId());
 
-        //문장 가져오기
-        Sentence sentence=sentenceRepository.findById(sentenceId).orElseThrow(()->
-                new ApiException(ErrorStatus._NOT_FOUND_SENTENCE));
-
-
+            if (wish == null) {
+                throw new ApiException(ErrorStatus._NOT_FOUND_WISH);
+            } else {
+                wishRepository.delete(wish);
+            }
+        }
     }
 
     //영어 문장 점수 저장
     @Transactional
-    public SaveSentenceScoreResponse saveSentenceScore(AuthUser authUser,Long sentenceId, MultipartFile file) {
+    public SaveSentenceScoreResponse saveSentenceScore(AuthUser authUser, Long sentenceId, MultipartFile file) {
 
-        try{
+        try {
             //파일 유효한지 확인
 
             //문장 DB에서 문장 가져오기
-            Sentence sentence=sentenceRepository.findById(sentenceId).orElseThrow(()->
+            Sentence sentence = sentenceRepository.findById(sentenceId).orElseThrow(() ->
                     new ApiException(ErrorStatus._NOT_FOUND_SENTENCE));
 
             //녹음 파일 base64로 인코딩
-            String base64Data= FileUtil.encodeFileToBase64(file);
+            String base64Data = FileUtil.encodeFileToBase64(file);
 
             //Etri 발음 API 호출
-            EtriApiRequest.Argument argument= EtriApiRequest.Argument.of("english",sentence.getSentence_en(),base64Data);
-            EtriApiRequest request=EtriApiRequest.of(argument);
-            EtriApiResponse etriApiResponse=etriApiClient.getPronunciationScore(etriClientKey,request);
+            EtriApiRequest.Argument argument = EtriApiRequest.Argument.of("english", sentence.getSentence_en(), base64Data);
+            EtriApiRequest request = EtriApiRequest.of(argument);
+            EtriApiResponse etriApiResponse = etriApiClient.getPronunciationScore(etriClientKey, request);
 
             //발음 점수 객체 생성 및 저장
-            BigDecimal getScore=BigDecimal.valueOf(Double.parseDouble(etriApiResponse.getReturn_object().getScore()));
+            BigDecimal getScore = BigDecimal.valueOf(Double.parseDouble(etriApiResponse.getReturn_object().getScore()));
 
             //사용자 가져오기
-            User user=userRepository.findById(authUser.getId()).orElseThrow(()->
+            User user = userRepository.findById(authUser.getId()).orElseThrow(() ->
                     new ApiException((ErrorStatus._USER_NOT_FOUND)));
 
-            Score score=scoreRepository.findByUserAndType(user,sentence.getWord().getType());
+            Score score = scoreRepository.findByUserAndType(user, sentence.getWord().getType());
 
             //점수 없으면 초기 저장
-            if(score==null){
-                Score newScore=Score.of(sentence.getWord().getType(),getScore, 1L,getScore,user);
+            if (score == null) {
+                Score newScore = Score.of(sentence.getWord().getType(), getScore, 1L, getScore, user);
                 scoreRepository.save(newScore);
-            }else{
+            } else {
                 //점수 업데이트
                 score.updateScore(getScore);
             }
 
             return SaveSentenceScoreResponse.of(getScore);
 
-        }catch(IOException e){
+        } catch (IOException e) {
             throw new ApiException(ErrorStatus._READ_FILE_ERROR);
         }
     }

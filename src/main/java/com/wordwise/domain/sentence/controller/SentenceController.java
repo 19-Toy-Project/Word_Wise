@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class SentenceController {
-
     private final SentenceService sentenceService;
 
     //문장 저장
@@ -23,23 +22,14 @@ public class SentenceController {
         return ApiResponse.success();
     }
 
-    //문장 찜
-    @PostMapping("/v1/sentences/wish/{sentenceId}")
+    //문장 찜 & 해제
+    @GetMapping("/v1/sentences/wish/{sentenceId}")
     public ApiResponse<Void> saveWish(
             @AuthenticationPrincipal AuthUser authUser,
-            @PathVariable Long sentenceId
-    ){
-        sentenceService.saveWish(authUser,sentenceId);
-        return ApiResponse.success();
-    }
-
-    //문장 찜 해제
-    @PostMapping("/v1/sentences/wish/{sentenceId}/cancel")
-    public ApiResponse<Void> cancelWish(
-            @AuthenticationPrincipal AuthUser authUser,
-            @PathVariable Long sentenceId
-    ){
-        sentenceService.cancelWish(authUser,sentenceId);
+            @PathVariable Long sentenceId,
+            @RequestParam Boolean state
+    ) {
+        sentenceService.saveWish(authUser, sentenceId, state);
         return ApiResponse.success();
     }
 
@@ -49,7 +39,7 @@ public class SentenceController {
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long sentenceId,
             @RequestParam(value = "file") MultipartFile multipartFile
-    ){
-        return ApiResponse.ok(sentenceService.saveSentenceScore(authUser, sentenceId,multipartFile));
+    ) {
+        return ApiResponse.ok(sentenceService.saveSentenceScore(authUser, sentenceId, multipartFile));
     }
 }

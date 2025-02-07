@@ -7,16 +7,16 @@ import java.util.List;
 @Getter
 public class GetWordDetailResponse {
     private String word;
-    private List<WordKrResponse> word_kr;
+    private List<WordKrResponse> word_krs;
     private List<SentenceResponse> sentences;
 
-    private GetWordDetailResponse(String word, List<WordKrResponse> word_kr, List<SentenceResponse> sentences) {
+    private GetWordDetailResponse(String word, List<WordKrResponse> word_krs, List<SentenceResponse> sentences) {
         this.word = word;
-        this.word_kr = word_kr;
+        this.word_krs = word_krs;
         this.sentences = sentences;
     }
 
-    public static GetWordDetailResponse of(String word, List<WordKrResponse> word_kr, List<SentenceResponse> sentences) {
-        return new GetWordDetailResponse(word, word_kr, sentences);
+    public static GetWordDetailResponse of(String word, List<WordKrResponse> word_krs, List<SentenceResponse> sentences) {
+        return new GetWordDetailResponse(word, word_krs, sentences);
     }
 }
