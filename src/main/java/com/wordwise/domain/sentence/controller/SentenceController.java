@@ -23,7 +23,7 @@ public class SentenceController {
     }
 
     //문장 찜 & 해제
-    @GetMapping("/v1/sentences/wish/{sentenceId}")
+    @PostMapping("/v1/sentences/wish/{sentenceId}")
     public ApiResponse<Void> saveWish(
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long sentenceId,
