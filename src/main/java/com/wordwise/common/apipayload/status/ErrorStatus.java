@@ -30,6 +30,9 @@ public enum ErrorStatus implements BaseCode {
     _FILE_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST,HttpStatus.BAD_REQUEST.value(), "파일 크기를 초과합니다"),
     _UNSUPPORTED_FILE_TYPE(HttpStatus.BAD_REQUEST,HttpStatus.BAD_REQUEST.value(), "지원되지 않는 파일 형식입니다"),
 
+    // score
+    _DOES_NOT_EXIST_SCORE_DATA(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(), "점수 데이터가 존재하지 않습니다."),
+
     // common
     _INVALID_REQUEST(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(), "잘못된 요청입니다."),
     _PERMISSION_DENIED(HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.value(), "권한이 없습니다.");
