@@ -6,17 +6,13 @@ import java.util.List;
 
 @Getter
 public class GetWordDetailResponse {
-    private String word;
-    private List<WordKrResponse> word_kr;
     private List<SentenceResponse> sentences;
 
-    private GetWordDetailResponse(String word, List<WordKrResponse> word_kr, List<SentenceResponse> sentences) {
-        this.word = word;
-        this.word_kr = word_kr;
+    private GetWordDetailResponse(List<SentenceResponse> sentences) {
         this.sentences = sentences;
     }
 
-    public static GetWordDetailResponse of(String word, List<WordKrResponse> word_kr, List<SentenceResponse> sentences) {
-        return new GetWordDetailResponse(word, word_kr, sentences);
+    public static GetWordDetailResponse of(List<SentenceResponse> sentences) {
+        return new GetWordDetailResponse(sentences);
     }
 }

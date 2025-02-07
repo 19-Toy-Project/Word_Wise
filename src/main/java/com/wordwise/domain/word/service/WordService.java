@@ -40,6 +40,10 @@ public class WordService {
         return words.map(word -> GetWordListResponse.of(
                 word.getId(),
                 word.getWord_en(),
+                //단어 리스트 변환
+                word.getWord_krs().stream()
+                        .map(wordKr -> WordKrResponse.of(wordKr.getWord_kr()))
+                        .collect(Collectors.toList()),
                 word.getType().getType()
         ));
 
@@ -51,11 +55,6 @@ public class WordService {
         Word word = wordRepository.findById(wordId).orElseThrow(() ->
                 new ApiException(ErrorStatus._NOT_FOUND_WORD));
 
-        //단어 리스트 변환
-        List<WordKrResponse> wordKrResponses = word.getWord_krs().stream()
-                .map(wordKr -> WordKrResponse.of(wordKr.getWord_kr()))
-                .collect(Collectors.toList());
-
         List<SentenceResponse> sentenceResponses = word.getSentences().stream()
                 .map(sentence -> SentenceResponse.of(
                         sentence.getId(),
@@ -63,7 +62,7 @@ public class WordService {
                         sentence.getSentence_kr()
                 )).collect(Collectors.toList());
 
-        return GetWordDetailResponse.of(word.getWord_en(), wordKrResponses, sentenceResponses);
+        return GetWordDetailResponse.of(sentenceResponses);
 
     }
 }
