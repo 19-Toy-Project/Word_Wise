@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface WishRepository extends JpaRepository<Wish,Long> {
     Wish findBySentenceIdAndUserId(Long id, Long id1);
+
+    Boolean existsBySentenceIdAndUserId(Long id, Long id1);
 }

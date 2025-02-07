@@ -3,6 +3,9 @@ package com.wordwise.domain.word.service;
 import com.wordwise.common.apipayload.status.ErrorStatus;
 import com.wordwise.common.enums.WordType;
 import com.wordwise.common.exception.ApiException;
+import com.wordwise.domain.auth.AuthUser;
+import com.wordwise.domain.sentence.entity.Wish;
+import com.wordwise.domain.sentence.repository.WishRepository;
 import com.wordwise.domain.word.entity.Word;
 import com.wordwise.domain.word.repository.WordRepository;
 import com.wordwise.domain.word.response.GetWordDetailResponse;
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 public class WordService {
 
     private final WordRepository wordRepository;
+    private final WishRepository wishRepository;
 
     //단어 리스트 조회
     public Page<GetWordListResponse> getWordList(WordType type, int page, int size) {
@@ -50,19 +54,24 @@ public class WordService {
     }
 
     //단어 상세 조회
-    public GetWordDetailResponse getWord(Long wordId) {
+    public GetWordDetailResponse getWord(AuthUser authUser, Long wordId) {
         //단어 있는 지 확인
         Word word = wordRepository.findById(wordId).orElseThrow(() ->
                 new ApiException(ErrorStatus._NOT_FOUND_WORD));
+
+        //단어 리스트 변환
+        List<WordKrResponse> wordKrResponses = word.getWord_krs().stream()
+                .map(wordKr -> WordKrResponse.of(wordKr.getWord_kr()))
+                .collect(Collectors.toList());
 
         List<SentenceResponse> sentenceResponses = word.getSentences().stream()
                 .map(sentence -> SentenceResponse.of(
                         sentence.getId(),
                         sentence.getSentence_en(),
-                        sentence.getSentence_kr()
+                        sentence.getSentence_kr(),
+                        authUser==null?null:wishRepository.existsBySentenceIdAndUserId(sentence.getId(),authUser.getId())
                 )).collect(Collectors.toList());
 
-        return GetWordDetailResponse.of(sentenceResponses);
-
+        return GetWordDetailResponse.of(word.getWord_en(), wordKrResponses, sentenceResponses);
     }
 }
