@@ -4,7 +4,6 @@ import com.wordwise.common.apipayload.status.ErrorStatus;
 import com.wordwise.common.enums.WordType;
 import com.wordwise.common.exception.ApiException;
 import com.wordwise.domain.auth.AuthUser;
-import com.wordwise.domain.sentence.entity.Wish;
 import com.wordwise.domain.sentence.repository.WishRepository;
 import com.wordwise.domain.word.entity.Word;
 import com.wordwise.domain.word.repository.WordRepository;
@@ -69,7 +68,7 @@ public class WordService {
                         sentence.getId(),
                         sentence.getSentence_en(),
                         sentence.getSentence_kr(),
-                        authUser==null?null:wishRepository.existsBySentenceIdAndUserId(sentence.getId(),authUser.getId())
+                        authUser == null ? null : wishRepository.existsBySentenceIdAndUserId(sentence.getId(), authUser.getId())
                 )).collect(Collectors.toList());
 
         return GetWordDetailResponse.of(word.getWord_en(), wordKrResponses, sentenceResponses);

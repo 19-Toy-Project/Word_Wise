@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class SentenceController {
-
     private final SentenceService sentenceService;
 
     //문장 저장
@@ -29,11 +28,10 @@ public class SentenceController {
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long sentenceId,
             @RequestParam Boolean state
-    ){
-        sentenceService.saveWish(authUser,sentenceId,state);
+    ) {
+        sentenceService.saveWish(authUser, sentenceId, state);
         return ApiResponse.success();
     }
-
 
     //문장 녹음 점수 저장
     @PostMapping("/v1/sentences/record/{sentenceId}")
@@ -41,7 +39,7 @@ public class SentenceController {
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long sentenceId,
             @RequestParam(value = "file") MultipartFile multipartFile
-    ){
-        return ApiResponse.ok(sentenceService.saveSentenceScore(authUser, sentenceId,multipartFile));
+    ) {
+        return ApiResponse.ok(sentenceService.saveSentenceScore(authUser, sentenceId, multipartFile));
     }
 }

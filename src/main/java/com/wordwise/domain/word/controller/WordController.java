@@ -33,6 +33,6 @@ public class WordController {
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long wordId
     ) {
-        return ApiResponse.ok(wordService.getWord(authUser,wordId));
+        return ApiResponse.ok(wordService.getWord(authUser, wordId));
     }
 }
