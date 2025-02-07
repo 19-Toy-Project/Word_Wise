@@ -87,7 +87,7 @@ public class SentenceService {
 
     //영어 문장 찜
     @Transactional
-    public void saveWish(AuthUser authUser, Long sentenceId, Boolean state) {
+    public void saveWish(AuthUser authUser, Long sentenceId, String state) {
         //사용자 가져오기
         User user = userRepository.findById(authUser.getId()).orElseThrow(() ->
                 new ApiException(ErrorStatus._USER_NOT_FOUND));
@@ -97,7 +97,7 @@ public class SentenceService {
                 new ApiException(ErrorStatus._NOT_FOUND_SENTENCE));
 
         //찜 안한 상태
-        if (state) {
+        if (state.equalsIgnoreCase("true")) {
             //문장 찜이 존재하는 지 확인
             Wish wish = wishRepository.findBySentenceIdAndUserId(sentence.getId(), user.getId());
 
@@ -107,7 +107,7 @@ public class SentenceService {
             } else {
                 throw new ApiException(ErrorStatus._FOUND_WISH);
             }
-        } else { //찜한 상태
+        } else if(state.equalsIgnoreCase("false")){ //찜한 상태
             //문장 찜이 존재하는 지 확인
             Wish wish = wishRepository.findBySentenceIdAndUserId(sentence.getId(), user.getId());
 
@@ -125,6 +125,7 @@ public class SentenceService {
 
         try {
             //파일 유효한지 확인
+            FileUtil.fileValidator(file,3L * 1024 * 1024);
 
             //문장 DB에서 문장 가져오기
             Sentence sentence = sentenceRepository.findById(sentenceId).orElseThrow(() ->
