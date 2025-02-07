@@ -87,7 +87,8 @@ public class SentenceService {
     }
 
     //영어 문장 찜
-    public void saveWish(AuthUser authUser, Long sentenceId){
+    @Transactional
+    public void saveWish(AuthUser authUser, Long sentenceId,Boolean state){
         //사용자 가져오기
         User user=userRepository.findById(authUser.getId()).orElseThrow(()->
                 new ApiException(ErrorStatus._USER_NOT_FOUND));
@@ -96,27 +97,26 @@ public class SentenceService {
         Sentence sentence=sentenceRepository.findById(sentenceId).orElseThrow(()->
                 new ApiException(ErrorStatus._NOT_FOUND_SENTENCE));
 
-        Wish newWish=Wish.of(user,sentence);
-        wishRepository.save(newWish);
-    }
+        //찜 안한 상태
+        if(state){
+            //문장 찜이 존재하는 지 확인
+            Wish wish=wishRepository.findBySentenceIdAndUserId(sentence.getId(),user.getId());
 
-    //영어 문장 찜 해제
-    public void cancelWish(AuthUser authUser, Long sentenceId){
-        //사용자 가져오기
-        User user=userRepository.findById(authUser.getId()).orElseThrow(()->
-                new ApiException(ErrorStatus._USER_NOT_FOUND));
+            if(wish==null){
+                Wish newWish=Wish.of(user,sentence);
+                wishRepository.save(newWish);
+            }else{
+                throw new ApiException(ErrorStatus._FOUND_WISH);
+            }
+        }else{ //찜한 상태
+            //문장 찜이 존재하는 지 확인
+            Wish wish=wishRepository.findBySentenceIdAndUserId(sentence.getId(),user.getId());
 
-        //문장 가져오기
-        Sentence sentence=sentenceRepository.findById(sentenceId).orElseThrow(()->
-                new ApiException(ErrorStatus._NOT_FOUND_SENTENCE));
-
-        //문장 찜이 존재하는 지 확인
-        Wish wish=wishRepository.findBySentenceIdAndUserId(sentence.getId(),user.getId());
-
-        if(wish==null){
-           throw new ApiException(ErrorStatus._NOT_FOUND_WISH);
-        }else{
-            wishRepository.delete(wish);
+            if(wish==null){
+                throw new ApiException(ErrorStatus._NOT_FOUND_WISH);
+            }else{
+                wishRepository.delete(wish);
+            }
         }
     }
 

@@ -23,25 +23,17 @@ public class SentenceController {
         return ApiResponse.success();
     }
 
-    //문장 찜
-    @PostMapping("/v1/sentences/wish/{sentenceId}")
+    //문장 찜 & 해제
+    @GetMapping("/v1/sentences/wish/{sentenceId}")
     public ApiResponse<Void> saveWish(
             @AuthenticationPrincipal AuthUser authUser,
-            @PathVariable Long sentenceId
+            @PathVariable Long sentenceId,
+            @RequestParam Boolean state
     ){
-        sentenceService.saveWish(authUser,sentenceId);
+        sentenceService.saveWish(authUser,sentenceId,state);
         return ApiResponse.success();
     }
 
-    //문장 찜 해제
-    @PostMapping("/v1/sentences/wish/{sentenceId}/cancel")
-    public ApiResponse<Void> cancelWish(
-            @AuthenticationPrincipal AuthUser authUser,
-            @PathVariable Long sentenceId
-    ){
-        sentenceService.cancelWish(authUser,sentenceId);
-        return ApiResponse.success();
-    }
 
     //문장 녹음 점수 저장
     @PostMapping("/v1/sentences/record/{sentenceId}")
