@@ -12,7 +12,7 @@ public class EtriApiResponse {
 
     @Getter
     @AllArgsConstructor
-    public static class ReturnObject{
+    public static class ReturnObject {
         private final String recognized;
         private final String score;
     }

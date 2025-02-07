@@ -25,6 +25,10 @@ public enum ErrorStatus implements BaseCode {
     _NOT_FOUND_SENTENCE(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(), "존재하지 않는 문장 입니다."),
     _READ_FILE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,HttpStatus.INTERNAL_SERVER_ERROR.value(),"파일을 읽는 중 서버 오류가 발생했습니다."),
 
+    //wish
+    _NOT_FOUND_WISH(HttpStatus.BAD_REQUEST,HttpStatus.BAD_REQUEST.value(), "찜하지 않은 문장 입니다"),
+    _FOUND_WISH(HttpStatus.BAD_REQUEST,HttpStatus.BAD_REQUEST.value(), "찜한 문장입니다"),
+
     //file
     _NOT_FOUND_FILE(HttpStatus.NOT_FOUND,HttpStatus.NOT_FOUND.value(),"파일을 찾을 수 없습니다"),
     _FILE_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST,HttpStatus.BAD_REQUEST.value(), "파일 크기를 초과합니다"),

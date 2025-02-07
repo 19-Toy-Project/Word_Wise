@@ -3,7 +3,6 @@ package com.wordwise.domain.word.entity;
 import com.wordwise.common.enums.WordType;
 import com.wordwise.common.utils.Timestamped;
 import com.wordwise.domain.sentence.entity.Sentence;
-import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
