@@ -11,10 +11,10 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public enum WordType {
 
-    Beginner("초급", 0),
-    Intermediate("중급", 1),
-    Advanced("고급", 2),
-    Conversation("회화", 3);
+    BEGINNER("초급", 0),
+    INTERMEDIATE("중급", 1),
+    ADVANCED("고급", 2),
+    CONVERSATION("회화", 3);
 
     private final String type;
     private final Integer code;
