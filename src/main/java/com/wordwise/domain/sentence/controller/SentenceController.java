@@ -27,7 +27,7 @@ public class SentenceController {
     public ApiResponse<Void> saveWish(
             @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long sentenceId,
-            @RequestParam Boolean state
+            @RequestParam String state
     ) {
         sentenceService.saveWish(authUser, sentenceId, state);
         return ApiResponse.success();
