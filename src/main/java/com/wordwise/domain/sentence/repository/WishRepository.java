@@ -16,7 +16,8 @@ public interface WishRepository extends JpaRepository<Wish,Long> {
     @Query("SELECT new com.wordwise.domain.mypage.dto.UserWishSentenceDto(s.word.id, s.id, s.sentence_en, s.sentence_kr)" +
             "FROM Wish w JOIN Sentence s " +
             "ON w.sentence.id = s.id " +
-            "WHERE w.user.id = :userId"
+            "WHERE w.user.id = :userId " +
+            "ORDER BY w.createdAt DESC"
     )
     Page<UserWishSentenceDto> findAllUserWishSentence(@Param("userId") Long userId, Pageable pageable);
 }
