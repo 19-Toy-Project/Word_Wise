@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
@@ -131,9 +132,14 @@ public class SentenceService {
             Sentence sentence = sentenceRepository.findById(sentenceId).orElseThrow(() ->
                     new ApiException(ErrorStatus._NOT_FOUND_SENTENCE));
 
-            //녹음 파일 base64로 인코딩
-            String base64Data = FileUtil.encodeFileToBase64(file);
+            //녹음 파일 16KHz로 변환
+            File convertedFile=FileUtil.convertTo16kHz(file);
+            log.info("convertedFile={}",convertedFile.getAbsoluteFile());
 
+            //녹음 파일 base64로 인코딩
+            String base64Data = FileUtil.encodeFileToBase64(convertedFile);
+
+            convertedFile.delete(); //16KHz로 변환된 파일 삭제
             //Etri 발음 API 호출
             EtriApiRequest.Argument argument = EtriApiRequest.Argument.of("english", sentence.getSentence_en(), base64Data);
             EtriApiRequest request = EtriApiRequest.of(argument);
@@ -156,7 +162,6 @@ public class SentenceService {
                 //점수 업데이트
                 score.updateScore(getScore);
             }
-
             return SaveSentenceScoreResponse.of(getScore);
 
         } catch (IOException e) {
