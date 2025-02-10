@@ -28,6 +28,7 @@ public enum ErrorStatus implements BaseCode {
     //wish
     _NOT_FOUND_WISH(HttpStatus.BAD_REQUEST,HttpStatus.BAD_REQUEST.value(), "찜하지 않은 문장 입니다"),
     _FOUND_WISH(HttpStatus.BAD_REQUEST,HttpStatus.BAD_REQUEST.value(), "찜한 문장입니다"),
+    _NOT_EXIST_WISH_SENTENCE(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(), "찜한 문장이 존재하지 않습니다."),
 
     //file
     _NOT_FOUND_FILE(HttpStatus.NOT_FOUND,HttpStatus.NOT_FOUND.value(),"파일을 찾을 수 없습니다"),

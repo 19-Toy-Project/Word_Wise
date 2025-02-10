@@ -4,11 +4,14 @@ import com.wordwise.common.apipayload.ApiResponse;
 import com.wordwise.domain.auth.AuthUser;
 import com.wordwise.domain.mypage.dto.UserAverageScoreDto;
 import com.wordwise.domain.mypage.response.UserAverageScoreResponse;
+import com.wordwise.domain.mypage.response.UserWishSentenceListResponse;
 import com.wordwise.domain.mypage.service.MyPageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,6 +30,14 @@ public class MyPageController {
     }
 
     // 사용자가 찜한 문장 조회
+    @GetMapping("/v1/users/wish/sentence")
+    public ApiResponse<Page<UserWishSentenceListResponse>> getUserWishSentenceList(
+            @AuthenticationPrincipal AuthUser authUser,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return ApiResponse.ok(myPageService.getUserWishSentenceList(authUser, page, size));
+    }
 
 
 
