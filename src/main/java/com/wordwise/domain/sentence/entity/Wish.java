@@ -1,5 +1,6 @@
 package com.wordwise.domain.sentence.entity;
 
+import com.wordwise.common.utils.Timestamped;
 import com.wordwise.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "sentence_wish")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Wish {
+public class Wish extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
