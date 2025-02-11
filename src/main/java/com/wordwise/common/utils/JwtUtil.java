@@ -77,8 +77,14 @@ public class JwtUtil {
                 .getBody();
     }
 
-    // 토큰 만료 확인
+    // 토큰이 현재 만료되었는지 확인
     public boolean isTokenExpired(String token) {
         return extractClaims(token).getExpiration().before(new Date());
     }
+
+    // 토큰 만료시간 가져오는 메서드 (토큰 만료 시간을 가져와서 블랙리스트 등록시 만료시간 기준으로 Redis TTL 설정)
+    public Date getExpiration(String token) {
+        return extractClaims(token).getExpiration();
+    }
+
 }
