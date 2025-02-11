@@ -5,8 +5,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordwise.common.utils.JwtUtil;
+import com.wordwise.domain.auth.AuthUser;
 import com.wordwise.domain.auth.dto.KakaoUserInfoDto;
 import com.wordwise.domain.auth.request.LoginRequest;
+import com.wordwise.domain.auth.response.LoginResponse;
 import com.wordwise.domain.user.entity.User;
 import com.wordwise.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,7 @@ public class KakaoService {
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
     private final JwtUtil jwtUtil;
+    private final AuthService authService;
 
     @Value("${kakao.rest.api.key}")
     private String restApiKey;
@@ -54,7 +57,7 @@ public class KakaoService {
     }
 
     // 실제 Login 서비스 용
-    public String kakaoLogin(LoginRequest code) throws JsonProcessingException {
+    public LoginResponse kakaoLogin(LoginRequest code) throws JsonProcessingException {
         // 1. "인가 코드"로 "액세스 토큰" 요청
         String accessToken = getToken(code.getCode());
 
@@ -64,10 +67,16 @@ public class KakaoService {
         // 3. 필요시에 회원가입
         User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
 
-        // 4. JWT 토큰 반환
-        String createToken = jwtUtil.createAccessToken(kakaoUser.getId(),kakaoUser.getEmail(), kakaoUser.getRole());
+        // 4. JWT Access Token 발급
+        String createAccessToken = jwtUtil.createAccessToken(kakaoUser.getId(),kakaoUser.getEmail(), kakaoUser.getRole());
 
-        return createToken;
+        // 5. JWT Refresh Token 발급
+        String createRefreshToken = jwtUtil.createRefreshToken(kakaoUser.getId(),kakaoUser.getEmail(), kakaoUser.getRole());
+
+        // 6. Refresh Token 저장
+        authService.saveRefreshToken(kakaoUser.getId(), createRefreshToken);
+
+        return LoginResponse.of(createAccessToken,createRefreshToken);
     }
 
     // 1. "인가 코드"로 "액세스 토큰" 요청

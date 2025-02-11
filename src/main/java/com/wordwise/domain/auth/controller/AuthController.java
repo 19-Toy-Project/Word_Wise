@@ -5,6 +5,7 @@ import com.wordwise.common.apipayload.ApiResponse;
 import com.wordwise.domain.auth.AuthUser;
 import com.wordwise.domain.auth.request.KakaoUserDeleteRequest;
 import com.wordwise.domain.auth.request.LoginRequest;
+import com.wordwise.domain.auth.response.LoginResponse;
 import com.wordwise.domain.auth.service.KakaoService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class AuthController {
     // 카카오 인가코드 처리 API (로그인)
     @PostMapping(value = "/v1/auth/kakao/login")
     @PreAuthorize("permitAll()")
-    public ApiResponse<String> kakaoLogin(
+    public ApiResponse<LoginResponse> kakaoLogin(
             @RequestBody LoginRequest code,
             HttpServletResponse response
     ) throws JsonProcessingException {
