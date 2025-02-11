@@ -17,7 +17,7 @@ public class RefreshToken {
     @Column(name="refresh_token",nullable = false, unique = true)
     private String refreshToken;
 
-    public RefreshToken(
+    private RefreshToken(
             Long userId,
             String refreshToken
     ) {
@@ -25,7 +25,7 @@ public class RefreshToken {
         this.refreshToken = refreshToken;
     }
 
-    private static RefreshToken of(
+    public static RefreshToken of(
             Long userId,
             String refreshToken
     ) {
