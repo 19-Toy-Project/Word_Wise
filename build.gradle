@@ -53,6 +53,9 @@ dependencies {
     implementation 'org.springframework.security:spring-security-oauth2-jose'
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
+    //FFmpeg
+    implementation 'net.bramp.ffmpeg:ffmpeg:0.6.2'
+
     // DB
     runtimeOnly 'com.mysql:mysql-connector-j'
     runtimeOnly 'com.h2database:h2'
