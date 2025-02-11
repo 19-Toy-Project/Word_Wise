@@ -54,7 +54,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
     //FFmpeg
-    implementation 'net.bramp.ffmpeg:ffmpeg:0.6.2'
+    implementation 'net.bramp.ffmpeg:ffmpeg:0.8.0'
 
     // DB
     runtimeOnly 'com.mysql:mysql-connector-j'
