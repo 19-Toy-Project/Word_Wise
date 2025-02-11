@@ -34,7 +34,7 @@ public class AuthController {
     }
 
     // 카카오 인가코드 처리 API (로그인)
-    @PostMapping(value = "/v1/auth/kakao/login")
+    @PostMapping(value = "/v1/auth/login")
     @PreAuthorize("permitAll()")
     public ApiResponse<LoginResponse> kakaoLogin(
             @RequestBody LoginRequest code,
@@ -45,14 +45,14 @@ public class AuthController {
     }
 
     // 카카오 로그아웃
-    @GetMapping("/v1/auth/kakao/logout")
+    @PostMapping("/v1/auth/logout")
     public ApiResponse<String> kakaoLogout(@AuthenticationPrincipal AuthUser authUser) {
         return ApiResponse.ok("로그아웃 완료");
     }
 
 
     // 카카오 회원 탈퇴
-    @PutMapping("/v1/auth/kakao/delete")
+    @PutMapping("/v1/auth/delete")
     public ResponseEntity<Void> kakaoUserDelete(@AuthenticationPrincipal AuthUser authUser, @RequestBody KakaoUserDeleteRequest deleteRequest) {
         Long userId = authUser.getId();
         // todo : AuthService kakaoUserDelete(id, deleteRequest);
