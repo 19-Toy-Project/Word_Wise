@@ -6,13 +6,13 @@ import java.math.BigDecimal;
 
 @Getter
 public class SaveSentenceScoreResponse {
-    private final BigDecimal score;
+    private final Long score;
 
-    private SaveSentenceScoreResponse(BigDecimal score) {
+    private SaveSentenceScoreResponse(Long score) {
         this.score = score;
     }
 
-    public static SaveSentenceScoreResponse of(BigDecimal score) {
+    public static SaveSentenceScoreResponse of(Long score) {
         return new SaveSentenceScoreResponse(score);
     }
 }

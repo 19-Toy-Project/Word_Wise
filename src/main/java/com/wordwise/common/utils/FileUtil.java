@@ -54,7 +54,7 @@ public class FileUtil {
                .setInput(inputFile.getAbsolutePath())
                .overrideOutputFiles(true)
                .addOutput(outputFile.getAbsolutePath())
-               .setAudioSampleRate(16000)
+               .setAudioSampleRate(16000) //16kHz로 변환
                .done();
 
        //실행
