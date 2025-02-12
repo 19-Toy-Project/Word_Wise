@@ -46,12 +46,12 @@ public class AuthController {
         return ApiResponse.ok(kakaoService.kakaoLogin(code));
     }
 
-    // 카카오 로그아웃
+    // 로그아웃
     @PostMapping("/v1/auth/logout")
-    public ApiResponse<String> logout(@AuthenticationPrincipal AuthUser authUser) {
-
-
-        return ApiResponse.ok(authService.logout());
+    public ApiResponse<String> logout(
+            @RequestHeader("Authorization") String authHeader
+    ) {
+        return ApiResponse.ok(authService.logout(authHeader));
     }
 
     // 카카오 회원 탈퇴

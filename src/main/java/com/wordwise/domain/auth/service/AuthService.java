@@ -28,6 +28,19 @@ public class AuthService {
         refreshTokenRepository.save(refreshTokenEntity);
     }
 
+    // 로그아웃
+    public String logout(String authHeader){
+
+        // AccessToken
+        String accessToken = authHeader.split("Bearer ")[1];
+
+
+
+
+        return "로그아웃 완료";
+    }
+
+
     // Refresh Token으로 Access Token 발급
     public String refreshAccessToken(String refreshToken) {
 
