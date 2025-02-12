@@ -6,6 +6,7 @@ import com.wordwise.domain.auth.AuthUser;
 import com.wordwise.domain.auth.request.KakaoUserDeleteRequest;
 import com.wordwise.domain.auth.request.LoginRequest;
 import com.wordwise.domain.auth.response.LoginResponse;
+import com.wordwise.domain.auth.service.AuthService;
 import com.wordwise.domain.auth.service.KakaoService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final KakaoService kakaoService;
+    private final AuthService authService;
 
     // 카카오 인가코드 처리 API (로그인) : *** BackEnd TEST 용 ***
     @GetMapping("/v1/auth/kakao/logintest")
@@ -36,7 +38,7 @@ public class AuthController {
     // 카카오 인가코드 처리 API (로그인)
     @PostMapping(value = "/v1/auth/login")
     @PreAuthorize("permitAll()")
-    public ApiResponse<LoginResponse> kakaoLogin(
+    public ApiResponse<LoginResponse> login(
             @RequestBody LoginRequest code,
             HttpServletResponse response
     ) throws JsonProcessingException {
@@ -46,10 +48,11 @@ public class AuthController {
 
     // 카카오 로그아웃
     @PostMapping("/v1/auth/logout")
-    public ApiResponse<String> kakaoLogout(@AuthenticationPrincipal AuthUser authUser) {
-        return ApiResponse.ok("로그아웃 완료");
-    }
+    public ApiResponse<String> logout(@AuthenticationPrincipal AuthUser authUser) {
 
+
+        return ApiResponse.ok(authService.logout());
+    }
 
     // 카카오 회원 탈퇴
     @PutMapping("/v1/auth/delete")
@@ -59,5 +62,12 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
+    // RefreshToken으로 AccessToken 재발급
+    @PostMapping("/v1/auth/token")
+    public ApiResponse<String> refreshAccessToken(
+            @CookieValue("refreshToken") String refreshToken
+    ){
+        return ApiResponse.ok(authService.refreshAccessToken(refreshToken));
+    }
 
 }
