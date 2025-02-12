@@ -27,8 +27,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 @Slf4j
@@ -131,16 +133,23 @@ public class SentenceService {
             Sentence sentence = sentenceRepository.findById(sentenceId).orElseThrow(() ->
                     new ApiException(ErrorStatus._NOT_FOUND_SENTENCE));
 
+            //녹음 파일 16KHz로 변환
+            File convertedFile=FileUtil.convertTo16kHz(file);
+            log.info("convertedFile={}",convertedFile.getAbsoluteFile());
+
             //녹음 파일 base64로 인코딩
-            String base64Data = FileUtil.encodeFileToBase64(file);
+            String base64Data = FileUtil.encodeFileToBase64(convertedFile);
+
+            convertedFile.delete(); //16KHz로 변환된 파일 삭제
 
             //Etri 발음 API 호출
             EtriApiRequest.Argument argument = EtriApiRequest.Argument.of("english", sentence.getSentence_en(), base64Data);
             EtriApiRequest request = EtriApiRequest.of(argument);
             EtriApiResponse etriApiResponse = etriApiClient.getPronunciationScore(etriClientKey, request);
 
-            //발음 점수 객체 생성 및 저장
-            BigDecimal getScore = BigDecimal.valueOf(Double.parseDouble(etriApiResponse.getReturn_object().getScore()));
+            //발음 점수 객체 생성 및 저장 (2자리수, 반올림)
+            log.info("etriScore={}",etriApiResponse.getReturn_object().getScore());
+            Long getScore = (long) (Double.parseDouble(etriApiResponse.getReturn_object().getScore())*20);
 
             //사용자 가져오기
             User user = userRepository.findById(authUser.getId()).orElseThrow(() ->
@@ -150,13 +159,12 @@ public class SentenceService {
 
             //점수 없으면 초기 저장
             if (score == null) {
-                Score newScore = Score.of(sentence.getWord().getType(), getScore, 1L, getScore, user);
+                Score newScore = Score.of(sentence.getWord().getType(), getScore, 1L, BigDecimal.valueOf(getScore), user);
                 scoreRepository.save(newScore);
             } else {
                 //점수 업데이트
                 score.updateScore(getScore);
             }
-
             return SaveSentenceScoreResponse.of(getScore);
 
         } catch (IOException e) {

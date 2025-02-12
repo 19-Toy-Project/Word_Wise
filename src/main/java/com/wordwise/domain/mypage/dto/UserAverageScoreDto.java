@@ -9,13 +9,13 @@ import java.math.BigDecimal;
 public class UserAverageScoreDto {
 
     private final WordType type;
-    private final BigDecimal totalScore;
+    private final Long totalScore;
     private final Long totalCount;
     private final BigDecimal average;
 
     private UserAverageScoreDto(
             WordType type,
-            BigDecimal totalScore,
+            Long totalScore,
             Long totalCount,
             BigDecimal average
     ) {
@@ -27,7 +27,7 @@ public class UserAverageScoreDto {
 
     public static UserAverageScoreDto of(
             WordType type,
-            BigDecimal totalScore,
+            Long totalScore,
             Long totalCount,
             BigDecimal average
     ) {
