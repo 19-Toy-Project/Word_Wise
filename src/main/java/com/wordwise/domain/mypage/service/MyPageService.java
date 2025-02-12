@@ -32,11 +32,6 @@ public class MyPageService {
         // 사용자 Score 객체 가져오기
         List<Score> userScore = scoreRepository.findByUserIdOrderByType(authUser.getId());
 
-        // 사용자 점수가 없을때
-        if (userScore.isEmpty()) {
-            throw new ApiException(ErrorStatus._DOES_NOT_EXIST_SCORE_DATA);
-        }
-
         List<UserAverageScoreDto> content = userScore.stream().map(s -> UserAverageScoreDto.of(
                 s.getType(),
                 s.getTotal_score(),

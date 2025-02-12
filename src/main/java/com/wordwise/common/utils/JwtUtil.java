@@ -21,7 +21,8 @@ import java.util.NoSuchElementException;
 public class JwtUtil {
 
     private static final String BEARER_PREFIX = "Bearer ";
-    private static final long TOKEN_TIME = 60 * 60 * 1000L; // 토큰 만료 시간 : 60분
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 15 * 60 * 1000L; // 토큰 만료 시간 : 15분
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 60 * 60 * 1000L; // 토큰 만료 시간 : 7일
 
     @Value("${jwt.secret.key}")
     private String secretKey;
@@ -34,17 +35,27 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    // 토큰 생성
-    public String createToken(Long userId, String email, UserRole userRole) {
-        Date date = new Date();
+    // Access Token 생성
+    public String createAccessToken(Long userId, String email, UserRole userRole) {
+        return generateToken(userId, email, userRole, ACCESS_TOKEN_EXPIRE_TIME);
+    }
+
+    // Refresh Token 생성
+    public String createRefreshToken(Long userId, String email, UserRole userRole) {
+        return generateToken(userId, email, userRole, REFRESH_TOKEN_EXPIRE_TIME);
+    }
+
+    // Access Token 생성
+    public String generateToken(Long userId, String email, UserRole userRole, long expireTime) {
+        Date now = new Date();
 
         return BEARER_PREFIX +
                 Jwts.builder()
                         .setSubject(String.valueOf(userId)) // userId
                         .claim("email", email)  // 사용자 email
                         .claim("userRole", userRole.name()) // 사용자 권한
-                        .setExpiration(new Date(date.getTime() + TOKEN_TIME))   // 토큰 만료 시간
-                        .setIssuedAt(date) // 발급일
+                        .setExpiration(new Date(now.getTime() + expireTime))   // 토큰 만료 시간
+                        .setIssuedAt(now) // 발급일
                         .signWith(key, signatureAlgorithm) // 암호화 알고리즘
                         .compact();
     }
@@ -65,4 +76,15 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
     }
+
+    // 토큰이 현재 만료되었는지 확인
+    public boolean isTokenExpired(String token) {
+        return extractClaims(token).getExpiration().before(new Date());
+    }
+
+    // 토큰 만료시간 가져오는 메서드 (토큰 만료 시간을 가져와서 블랙리스트 등록시 만료시간 기준으로 Redis TTL 설정)
+    public Date getExpiration(String token) {
+        return extractClaims(token).getExpiration();
+    }
+
 }

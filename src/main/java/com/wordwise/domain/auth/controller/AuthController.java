@@ -5,6 +5,8 @@ import com.wordwise.common.apipayload.ApiResponse;
 import com.wordwise.domain.auth.AuthUser;
 import com.wordwise.domain.auth.request.KakaoUserDeleteRequest;
 import com.wordwise.domain.auth.request.LoginRequest;
+import com.wordwise.domain.auth.response.LoginResponse;
+import com.wordwise.domain.auth.service.AuthService;
 import com.wordwise.domain.auth.service.KakaoService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final KakaoService kakaoService;
+    private final AuthService authService;
 
     // 카카오 인가코드 처리 API (로그인) : *** BackEnd TEST 용 ***
     @GetMapping("/v1/auth/kakao/logintest")
@@ -33,9 +36,9 @@ public class AuthController {
     }
 
     // 카카오 인가코드 처리 API (로그인)
-    @PostMapping(value = "/v1/auth/kakao/login")
+    @PostMapping(value = "/v1/auth/login")
     @PreAuthorize("permitAll()")
-    public ApiResponse<String> kakaoLogin(
+    public ApiResponse<LoginResponse> login(
             @RequestBody LoginRequest code,
             HttpServletResponse response
     ) throws JsonProcessingException {
@@ -43,20 +46,28 @@ public class AuthController {
         return ApiResponse.ok(kakaoService.kakaoLogin(code));
     }
 
-    // 카카오 로그아웃
-    @GetMapping("/v1/auth/kakao/logout")
-    public ApiResponse<String> kakaoLogout(@AuthenticationPrincipal AuthUser authUser) {
-        return ApiResponse.ok("로그아웃 완료");
+    // 로그아웃
+    @PostMapping("/v1/auth/logout")
+    public ApiResponse<String> logout(
+            @RequestHeader("Authorization") String authHeader
+    ) {
+        return ApiResponse.ok(authService.logout(authHeader));
     }
 
-
     // 카카오 회원 탈퇴
-    @PutMapping("/v1/auth/kakao/delete")
+    @PutMapping("/v1/auth/delete")
     public ResponseEntity<Void> kakaoUserDelete(@AuthenticationPrincipal AuthUser authUser, @RequestBody KakaoUserDeleteRequest deleteRequest) {
         Long userId = authUser.getId();
         // todo : AuthService kakaoUserDelete(id, deleteRequest);
         return ResponseEntity.noContent().build();
     }
 
+    // RefreshToken으로 AccessToken 재발급
+    @PostMapping("/v1/auth/token")
+    public ApiResponse<String> refreshAccessToken(
+            @CookieValue("refreshToken") String refreshToken
+    ){
+        return ApiResponse.ok(authService.refreshAccessToken(refreshToken));
+    }
 
 }
