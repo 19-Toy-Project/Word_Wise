@@ -8,8 +8,12 @@ import com.wordwise.domain.auth.entity.RefreshToken;
 import com.wordwise.domain.auth.repository.RefreshTokenRepository;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
     private final RefreshTokenRepository refreshTokenRepository;
+    private final RedisTemplate<String, Object> redisTemplate;
     private final JwtUtil jwtUtil;
+
+    private static final String BLACKLIST_PREFIX = "BLACKLIST_";
 
     // Refresh Token 저장
     @Transactional
@@ -29,17 +36,27 @@ public class AuthService {
     }
 
     // 로그아웃
+    @Transactional
     public String logout(String authHeader){
 
-        // AccessToken
+        // Access Token
         String accessToken = authHeader.split("Bearer ")[1];
+        Claims claims = jwtUtil.extractClaims(accessToken);
+        Long userId = Long.valueOf(claims.getSubject());
 
+        // Access Token 남은 시간 추출
+        Date expiration = jwtUtil.getExpiration(accessToken);
+        long expireTimeMillis = expiration.getTime() - System.currentTimeMillis();
 
+        // Access Token Blacklist에 저장
+        redisTemplate.opsForValue().set(BLACKLIST_PREFIX + accessToken, "logout", expireTimeMillis, TimeUnit.MILLISECONDS);
 
+        // Refresh Token 삭제
+        RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId).orElseThrow(()-> new ApiException(ErrorStatus._NOT_EXIST_REFRESH_TOKEN));
+        refreshTokenRepository.delete(refreshToken);
 
         return "로그아웃 완료";
     }
-
 
     // Refresh Token으로 Access Token 발급
     public String refreshAccessToken(String refreshToken) {

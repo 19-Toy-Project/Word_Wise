@@ -14,6 +14,7 @@ public enum ErrorStatus implements BaseCode {
     // auth
     _INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.value(), "리프레시 토큰이 유효하지 않습니다."),
     _MISMATCHED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.value(), "리프레시 토큰이 일치하지 않습니다."),
+    _NOT_EXIST_REFRESH_TOKEN(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(), "해당 리프레시 토큰이 존재하지 않습니다."),
 
     // user
     _USER_STATUS_NOT_FOUND(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(), "존재하지 않는 계정 상태 입니다."),
