@@ -73,13 +73,15 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
             } catch (ExpiredJwtException e) {
                 // Refresh Token 발급 요청일 경우 API 정상 동작
                 if(requestURI.equals("/api/v1/auth/token")){
-                    log.info("API 요청됨");
+                    log.info("AccessToken 재발급 API 요청");
                     chain.doFilter(httpRequest, httpResponse);
                     httpRequest.setAttribute("exception", "EXPIRED_TOKEN");
                     return;
                 }
                 log.error("Expired JWT token, 만료된 JWT token 입니다.", e);
-                httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "만료된 JWT 토큰입니다.");
+                httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                httpResponse.getWriter().write("JWT UNAUTHORIZED ERROR JWT : " + e.getMessage());
+                return;
             } catch (UnsupportedJwtException e) {
                 log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.", e);
                 httpResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "지원되지 않는 JWT 토큰입니다.");
