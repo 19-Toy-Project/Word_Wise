@@ -4,6 +4,7 @@ import com.wordwise.common.enums.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -45,6 +46,7 @@ public class WebSecurityConfig {
                                 "/api/v1/auth/token"
                         )
                         .permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()     // OPTIONS 요청 허용
                         .requestMatchers(
                                 // 어드민 권한 api
                                 "/api/admin"
