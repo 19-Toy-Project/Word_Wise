@@ -8,14 +8,16 @@ import com.wordwise.domain.auth.request.LoginRequest;
 import com.wordwise.domain.auth.response.LoginResponse;
 import com.wordwise.domain.auth.service.AuthService;
 import com.wordwise.domain.auth.service.KakaoService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -65,8 +67,14 @@ public class AuthController {
     // RefreshToken으로 AccessToken 재발급
     @PostMapping("/v1/auth/token")
     public ApiResponse<String> refreshAccessToken(
-            @CookieValue("refreshToken") String refreshToken
+            @CookieValue("refreshToken") String refreshToken,
+            HttpServletRequest request
     ){
+        Object exception = request.getAttribute("exception");
+        if("EXPIRED_TOKEN".equals(exception)){
+            log.info("Refresh token expired *** 만료 EXCEPTION ***");
+        }
+        log.info("Refresh token: {}", refreshToken);
         return ApiResponse.ok(authService.refreshAccessToken(refreshToken));
     }
 

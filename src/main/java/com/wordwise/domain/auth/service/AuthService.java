@@ -8,6 +8,7 @@ import com.wordwise.domain.auth.entity.RefreshToken;
 import com.wordwise.domain.auth.repository.RefreshTokenRepository;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -68,8 +70,12 @@ public class AuthService {
         RefreshToken storedToken = refreshTokenRepository.findByUserId(userId)
                 .orElseThrow(()-> new ApiException(ErrorStatus._INVALID_REFRESH_TOKEN));
 
+        log.info("Refresh token 1 : {} ", storedToken);
+        log.info("Refresh token 2 : {} ", storedToken.getRefreshToken());
+
+        String storedRefreshToken = storedToken.getRefreshToken().split("Bearer ")[1];
         // 저장된 Refresh Token이랑 동일한지 확인
-        if(!storedToken.getRefreshToken().equals(refreshToken)) {
+        if(!storedRefreshToken.equals(refreshToken)) {
             throw new ApiException(ErrorStatus._MISMATCHED_REFRESH_TOKEN);
         }
 

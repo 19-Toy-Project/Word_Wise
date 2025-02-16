@@ -41,7 +41,8 @@ public class WebSecurityConfig {
                                 "/",
                                 "/api/v1/auth/kakao/logintest",
                                 "/api/v1/auth/login",
-                                "/api/v1/words/**"
+                                "/api/v1/words/**",
+                                "/api/v1/auth/token"
                         )
                         .permitAll()
                         .requestMatchers(
