@@ -38,6 +38,14 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
 
         String authorizationHeader = httpRequest.getHeader("Authorization");
         String requestURI = httpRequest.getRequestURI();
+
+        // Refresh Token 발급 요청일 경우 API 정상 동작
+        if(requestURI.equals("/api/v1/auth/token")){
+            chain.doFilter(httpRequest, httpResponse);
+//            httpRequest.setAttribute("exception", "EXPIRED_TOKEN");
+            return;
+        }
+
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = jwtUtil.substringToken(authorizationHeader);
         }
@@ -69,11 +77,7 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
                 log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.", e);
                 httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "유효하지 않는 JWT 서명입니다.");
             } catch (ExpiredJwtException e) {
-                // Refresh Token 발급 요청일 경우 API 정상 동작
-                if(requestURI.equals("/api/v1/auth/token")){
-                    chain.doFilter(httpRequest, httpResponse);
-                    return;
-                }
+
                 log.error("Expired JWT token, 만료된 JWT token 입니다.", e);
                 httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "만료된 JWT 토큰입니다.");
             } catch (UnsupportedJwtException e) {
