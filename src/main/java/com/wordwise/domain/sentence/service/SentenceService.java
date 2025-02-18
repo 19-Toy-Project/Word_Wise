@@ -121,54 +121,54 @@ public class SentenceService {
         }
     }
 
-    //영어 문장 점수 저장
-    @Transactional
-    public SaveSentenceScoreResponse saveSentenceScore(AuthUser authUser, Long sentenceId, MultipartFile file) {
-
-        try {
-            //파일 유효한지 확인
-            FileUtil.fileValidator(file,3L * 1024 * 1024);
-
-            //문장 DB에서 문장 가져오기
-            Sentence sentence = sentenceRepository.findById(sentenceId).orElseThrow(() ->
-                    new ApiException(ErrorStatus._NOT_FOUND_SENTENCE));
-
-            //녹음 파일 16KHz로 변환
-            File convertedFile=FileUtil.convertTo16kHz(file);
-            log.info("convertedFile={}",convertedFile.getAbsoluteFile());
-
-            //녹음 파일 base64로 인코딩
-            String base64Data = FileUtil.encodeFileToBase64(convertedFile);
-
-            convertedFile.delete(); //16KHz로 변환된 파일 삭제
-
-            //Etri 발음 API 호출
-            EtriApiRequest.Argument argument = EtriApiRequest.Argument.of("english", sentence.getSentence_en(), base64Data);
-            EtriApiRequest request = EtriApiRequest.of(argument);
-            EtriApiResponse etriApiResponse = etriApiClient.getPronunciationScore(etriClientKey, request);
-
-            //발음 점수 객체 생성 및 저장 (2자리수, 반올림)
-            log.info("etriScore={}",etriApiResponse.getReturn_object().getScore());
-            Long getScore = (long) (Double.parseDouble(etriApiResponse.getReturn_object().getScore())*20);
-
-            //사용자 가져오기
-            User user = userRepository.findById(authUser.getId()).orElseThrow(() ->
-                    new ApiException((ErrorStatus._USER_NOT_FOUND)));
-
-            Score score = scoreRepository.findByUserAndType(user, sentence.getWord().getType());
-
-            //점수 없으면 초기 저장
-            if (score == null) {
-                Score newScore = Score.of(sentence.getWord().getType(), getScore, 1L, BigDecimal.valueOf(getScore), user);
-                scoreRepository.save(newScore);
-            } else {
-                //점수 업데이트
-                score.updateScore(getScore);
-            }
-            return SaveSentenceScoreResponse.of(getScore);
-
-        } catch (IOException e) {
-            throw new ApiException(ErrorStatus._READ_FILE_ERROR);
-        }
-    }
+//    //영어 문장 점수 저장
+//    @Transactional
+//    public SaveSentenceScoreResponse saveSentenceScore(AuthUser authUser, Long sentenceId, MultipartFile file) {
+//
+//        try {
+//            //파일 유효한지 확인
+//            FileUtil.fileValidator(file,3L * 1024 * 1024);
+//
+//            //문장 DB에서 문장 가져오기
+//            Sentence sentence = sentenceRepository.findById(sentenceId).orElseThrow(() ->
+//                    new ApiException(ErrorStatus._NOT_FOUND_SENTENCE));
+//
+//            //녹음 파일 16KHz로 변환
+//            File convertedFile=FileUtil.convertTo16kHz(file);
+//            log.info("convertedFile={}",convertedFile.getAbsoluteFile());
+//
+//            //녹음 파일 base64로 인코딩
+//            String base64Data = FileUtil.encodeFileToBase64(convertedFile);
+//
+//            convertedFile.delete(); //16KHz로 변환된 파일 삭제
+//
+//            //Etri 발음 API 호출
+//            EtriApiRequest.Argument argument = EtriApiRequest.Argument.of("english", sentence.getSentence_en(), base64Data);
+//            EtriApiRequest request = EtriApiRequest.of(argument);
+//            EtriApiResponse etriApiResponse = etriApiClient.getPronunciationScore(etriClientKey, request);
+//
+//            //발음 점수 객체 생성 및 저장 (2자리수, 반올림)
+//            log.info("etriScore={}",etriApiResponse.getReturn_object().getScore());
+//            Long getScore = (long) (Double.parseDouble(etriApiResponse.getReturn_object().getScore())*20);
+//
+//            //사용자 가져오기
+//            User user = userRepository.findById(authUser.getId()).orElseThrow(() ->
+//                    new ApiException((ErrorStatus._USER_NOT_FOUND)));
+//
+//            Score score = scoreRepository.findByUserAndType(user, sentence.getWord().getType());
+//
+//            //점수 없으면 초기 저장
+//            if (score == null) {
+//                Score newScore = Score.of(sentence.getWord().getType(), getScore, 1L, BigDecimal.valueOf(getScore), user);
+//                scoreRepository.save(newScore);
+//            } else {
+//                //점수 업데이트
+//                score.updateScore(getScore);
+//            }
+//            return SaveSentenceScoreResponse.of(getScore);
+//
+//        } catch (IOException e) {
+//            throw new ApiException(ErrorStatus._READ_FILE_ERROR);
+//        }
+//    }
 }
