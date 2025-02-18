@@ -37,28 +37,28 @@ public class AuthService {
         refreshTokenRepository.save(refreshTokenEntity);
     }
 
-    // 로그아웃
-    @Transactional
-    public String logout(String authHeader){
-
-        // Access Token
-        String accessToken = authHeader.split("Bearer ")[1];
-        Claims claims = jwtUtil.extractClaims(accessToken);
-        Long userId = Long.valueOf(claims.getSubject());
-
-        // Access Token 남은 시간 추출
-        Date expiration = jwtUtil.getExpiration(accessToken);
-        long expireTimeMillis = expiration.getTime() - System.currentTimeMillis();
-
-        // Access Token Blacklist에 저장
-        redisTemplate.opsForValue().set(BLACKLIST_PREFIX + accessToken, "logout", expireTimeMillis, TimeUnit.MILLISECONDS);
-
-        // Refresh Token 삭제
-        RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId).orElseThrow(()-> new ApiException(ErrorStatus._NOT_EXIST_REFRESH_TOKEN));
-        refreshTokenRepository.delete(refreshToken);
-
-        return "로그아웃 완료";
-    }
+//    // 로그아웃
+//    @Transactional
+//    public String logout(String authHeader){
+//
+//        // Access Token
+//        String accessToken = authHeader.split("Bearer ")[1];
+//        Claims claims = jwtUtil.extractClaims(accessToken);
+//        Long userId = Long.valueOf(claims.getSubject());
+//
+//        // Access Token 남은 시간 추출
+//        Date expiration = jwtUtil.getExpiration(accessToken);
+//        long expireTimeMillis = expiration.getTime() - System.currentTimeMillis();
+//
+//        // Access Token Blacklist에 저장
+//        redisTemplate.opsForValue().set(BLACKLIST_PREFIX + accessToken, "logout", expireTimeMillis, TimeUnit.MILLISECONDS);
+//
+//        // Refresh Token 삭제
+//        RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId).orElseThrow(()-> new ApiException(ErrorStatus._NOT_EXIST_REFRESH_TOKEN));
+//        refreshTokenRepository.delete(refreshToken);
+//
+//        return "로그아웃 완료";
+//    }
 
     // Refresh Token으로 Access Token 발급
     public String refreshAccessToken(String refreshToken) {

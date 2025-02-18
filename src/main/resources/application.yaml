@@ -18,10 +18,10 @@ spring:
         highlight_sql: true
         use_sql_comments: true
 
-# Redis Cache
-  redis:
-    host: localhost
-    port: 6379
+## Redis Cache
+#  redis:
+#    host: localhost
+#    port: 6379
 
 jwt:
   secret:
