@@ -43,7 +43,8 @@ public class WebSecurityConfig {
                                 "/api/v1/auth/kakao/logintest",
                                 "/api/v1/auth/login",
                                 "/api/v1/words/**",
-                                "/api/v1/auth/token"
+                                "/api/v1/auth/token",
+                                "/api/v1/sentences/save"
                         )
                         .permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()     // OPTIONS 요청 허용

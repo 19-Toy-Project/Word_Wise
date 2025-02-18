@@ -30,7 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 
 @Slf4j
@@ -123,7 +122,7 @@ public class SentenceService {
 
     //영어 문장 점수 저장
     @Transactional
-    public SaveSentenceScoreResponse saveSentenceScore(AuthUser authUser, Long sentenceId, MultipartFile file) {
+    public SaveSentenceScoreResponse saveSentenceScore(AuthUser authUser,Long sentenceId, MultipartFile file) {
 
         try {
             //파일 유효한지 확인

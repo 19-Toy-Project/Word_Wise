@@ -40,6 +40,6 @@ public class SentenceController {
             @PathVariable Long sentenceId,
             @RequestParam(value = "file") MultipartFile multipartFile
     ) {
-        return ApiResponse.ok(sentenceService.saveSentenceScore(authUser, sentenceId, multipartFile));
+        return ApiResponse.ok(sentenceService.saveSentenceScore(authUser,sentenceId, multipartFile));
     }
 }
