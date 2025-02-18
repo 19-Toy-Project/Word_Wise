@@ -30,6 +30,7 @@ public class CorsConfig {
         allowedHttpMethods.add("PUT");
         allowedHttpMethods.add("PATCH");
         allowedHttpMethods.add("DELETE");
+        allowedHttpMethods.add("OPTIONS");
         configuration.setAllowedMethods(allowedHttpMethods);
 
         // 허용하는 헤더 지정 (모든 헤더 허용으로 지정함)

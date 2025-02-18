@@ -10,12 +10,13 @@ import com.wordwise.domain.auth.service.AuthService;
 import com.wordwise.domain.auth.service.KakaoService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -46,13 +47,13 @@ public class AuthController {
         return ApiResponse.ok(kakaoService.kakaoLogin(code));
     }
 
-    // 로그아웃
-    @PostMapping("/v1/auth/logout")
-    public ApiResponse<String> logout(
-            @RequestHeader("Authorization") String authHeader
-    ) {
-        return ApiResponse.ok(authService.logout(authHeader));
-    }
+//    // 로그아웃
+//    @PostMapping("/v1/auth/logout")
+//    public ApiResponse<String> logout(
+//            @RequestHeader("Authorization") String authHeader
+//    ) {
+//        return ApiResponse.ok(authService.logout(authHeader));
+//    }
 
     // 카카오 회원 탈퇴
     @PutMapping("/v1/auth/delete")
@@ -67,6 +68,7 @@ public class AuthController {
     public ApiResponse<String> refreshAccessToken(
             @CookieValue("refreshToken") String refreshToken
     ){
+        log.info("Refresh token: {}", refreshToken);
         return ApiResponse.ok(authService.refreshAccessToken(refreshToken));
     }
 
