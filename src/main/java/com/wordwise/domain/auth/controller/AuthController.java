@@ -8,7 +8,6 @@ import com.wordwise.domain.auth.request.LoginRequest;
 import com.wordwise.domain.auth.response.LoginResponse;
 import com.wordwise.domain.auth.service.AuthService;
 import com.wordwise.domain.auth.service.KakaoService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,13 +47,13 @@ public class AuthController {
         return ApiResponse.ok(kakaoService.kakaoLogin(code));
     }
 
-//    // 로그아웃
-//    @PostMapping("/v1/auth/logout")
-//    public ApiResponse<String> logout(
-//            @RequestHeader("Authorization") String authHeader
-//    ) {
-//        return ApiResponse.ok(authService.logout(authHeader));
-//    }
+    // 로그아웃
+    @PostMapping("/v1/auth/logout")
+    public ApiResponse<String> logout(
+            @RequestHeader("Authorization") String authHeader
+    ) {
+        return ApiResponse.ok(authService.logout(authHeader));
+    }
 
     // 카카오 회원 탈퇴
     @PutMapping("/v1/auth/delete")
@@ -67,13 +66,8 @@ public class AuthController {
     // RefreshToken으로 AccessToken 재발급
     @PostMapping("/v1/auth/token")
     public ApiResponse<String> refreshAccessToken(
-            @CookieValue("refreshToken") String refreshToken,
-            HttpServletRequest request
+            @CookieValue("refreshToken") String refreshToken
     ){
-        Object exception = request.getAttribute("exception");
-        if("EXPIRED_TOKEN".equals(exception)){
-            log.info("Refresh token expired *** 만료 EXCEPTION ***");
-        }
         log.info("Refresh token: {}", refreshToken);
         return ApiResponse.ok(authService.refreshAccessToken(refreshToken));
     }
