@@ -32,38 +32,39 @@ public class FileUtil {
         if (file.getSize() > size) {
             throw new ApiException(ErrorStatus._FILE_SIZE_EXCEEDED);
         }
-        if(!file.getContentType().equalsIgnoreCase("audio/wave")){
+        if(!file.getContentType().equalsIgnoreCase("audio/wav")){
             throw new ApiException(ErrorStatus._UNSUPPORTED_FILE_TYPE);
         }
     }
 
-//    //16kHZ로 변환
-//    public static File convertTo16kHz(MultipartFile multipartFile) throws IOException{
-//        //MultipartFile을 File로 변환
-//        File inputFile=File.createTempFile("input",".wav");
-//        multipartFile.transferTo(inputFile);
-//
-//        File outputFile=File.createTempFile("output",".wav");
-//
-//        //FFmpeg 실행 객체 생성
-//       FFmpeg ffmpeg=new FFmpeg(new File("src/main/resources/ffmpeg/ffmpeg.exe").getAbsolutePath());
-//       FFprobe ffprobe=new FFprobe(new File("src/main/resources/ffmpeg/ffprobe.exe").getAbsolutePath());
-//
-//       //FFmpeg 객체 변환
-//       FFmpegBuilder builder=new FFmpegBuilder()
-//               .setInput(inputFile.getAbsolutePath())
-//               .overrideOutputFiles(true)
-//               .addOutput(outputFile.getAbsolutePath())
-//               .setAudioSampleRate(16000) //16kHz로 변환
-//               .done();
-//
-//       //실행
-//        FFmpegExecutor executor=new FFmpegExecutor(ffmpeg,ffprobe);
-//        executor.createJob(builder).run();
-//
-//        inputFile.delete();
-//
-//        return outputFile;
-//    }
+    //16kHZ로 변환
+    public static File convertTo16kHz(MultipartFile multipartFile) throws IOException{
+        //MultipartFile을 File로 변환
+        File inputFile=File.createTempFile("input",".wav");
+        multipartFile.transferTo(inputFile);
+
+        File outputFile=File.createTempFile("output",".wav");
+
+        //FFmpeg 실행 객체 생성
+        FFmpeg ffmpeg=new FFmpeg(new File("/usr/bin/ffmpeg").getAbsolutePath());
+        FFprobe ffprobe=new FFprobe(new File("/usr/bin/ffprobe").getAbsolutePath());
+
+       //FFmpeg 객체 변환
+       FFmpegBuilder builder=new FFmpegBuilder()
+               .setInput(inputFile.getAbsolutePath())
+               .overrideOutputFiles(true)
+               .addOutput(outputFile.getAbsolutePath())
+               .setAudioSampleRate(16000) //16kHz로 변환
+               .done();
+
+       //실행
+        FFmpegExecutor executor=new FFmpegExecutor(ffmpeg,ffprobe);
+        executor.createJob(builder).run();
+
+        inputFile.delete();
+
+        return outputFile;
+    }
+
 
 }

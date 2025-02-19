@@ -33,13 +33,13 @@ public class SentenceController {
         return ApiResponse.success();
     }
 
-//    //문장 녹음 점수 저장
-//    @PostMapping("/v1/sentences/record/{sentenceId}")
-//    public ApiResponse<SaveSentenceScoreResponse> saveSentenceScore(
-//            @AuthenticationPrincipal AuthUser authUser,
-//            @PathVariable Long sentenceId,
-//            @RequestParam(value = "file") MultipartFile multipartFile
-//    ) {
-//        return ApiResponse.ok(sentenceService.saveSentenceScore(authUser, sentenceId, multipartFile));
-//    }
+    //문장 녹음 점수 저장
+    @PostMapping("/v1/sentences/record/{sentenceId}")
+    public ApiResponse<SaveSentenceScoreResponse> saveSentenceScore(
+            @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable Long sentenceId,
+            @RequestParam(value = "file") MultipartFile multipartFile
+    ) {
+        return ApiResponse.ok(sentenceService.saveSentenceScore(authUser,sentenceId, multipartFile));
+    }
 }
