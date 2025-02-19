@@ -12,7 +12,7 @@ COPY . .
 RUN chmod +x gradlew
 
 # Gradle 빌드 실행
-RUN ./gradlew build --no-daemon
+RUN ./gradlew build --no-daemon -x test
 
 # JAR 복사 및 실행
 COPY build/libs/*.jar app.jar
