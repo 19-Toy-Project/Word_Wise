@@ -19,11 +19,17 @@ public class CorsConfig {
         //인증, 인가를 위한 credentials 를 TRUE로 설정
         configuration.setAllowCredentials(true);
 
-        //리소스를 허용할 URL 지정
-        ArrayList<String> allowedOriginPatterns = new ArrayList<>();
-        allowedOriginPatterns.add("http://localhost:3000");
-        allowedOriginPatterns.add("https://port-next-wordwise-front-m7a8ouhb0246019e.sel4.cloudtype.app");
-        configuration.setAllowedOrigins(allowedOriginPatterns);
+//        //리소스를 허용할 URL 지정
+//        ArrayList<String> allowedOriginPatterns = new ArrayList<>();
+//        allowedOriginPatterns.add("http://localhost:3000");
+//        allowedOriginPatterns.add("https://port-next-wordwise-front-m7a8ouhb0246019e.sel4.cloudtype.app");
+//        configuration.setAllowedOrigins(allowedOriginPatterns);
+
+        // 허용할 오리진 설정 (와일드카드 사용 가능)
+        configuration.setAllowedOriginPatterns(List.of(
+                "http://localhost:3000",
+                "https://port-next-wordwise-front-m7a8ouhb0246019e.sel4.cloudtype.app"
+        ));
 
         //허용하는 HTTP METHOD 지정
         ArrayList<String> allowedHttpMethods = new ArrayList<>();
