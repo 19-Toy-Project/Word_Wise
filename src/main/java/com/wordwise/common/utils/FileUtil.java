@@ -46,8 +46,8 @@ public class FileUtil {
         File outputFile=File.createTempFile("output",".wav");
 
         //FFmpeg 실행 객체 생성
-        FFmpeg ffmpeg=new FFmpeg(new File("/usr/bin/ffmpeg").getAbsolutePath());
-        FFprobe ffprobe=new FFprobe(new File("/usr/bin/ffprobe").getAbsolutePath());
+        FFmpeg ffmpeg=new FFmpeg(new File("src/main/resources/ffmpeg/ffmpeg.exe").getAbsolutePath());
+        FFprobe ffprobe=new FFprobe(new File("src/main/resources/ffmpeg/ffprobe.exe").getAbsolutePath());
 
        //FFmpeg 객체 변환
        FFmpegBuilder builder=new FFmpegBuilder()
