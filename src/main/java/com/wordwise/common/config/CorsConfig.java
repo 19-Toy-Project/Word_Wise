@@ -20,6 +20,7 @@ public class CorsConfig {
         //리소스를 허용할 URL 지정
         ArrayList<String> allowedOriginPatterns = new ArrayList<>();
         allowedOriginPatterns.add("http://localhost:3000");
+        allowedOriginPatterns.add("https://port-next-wordwise-front-m7a8ouhb0246019e.sel4.cloudtype.app");
         configuration.setAllowedOrigins(allowedOriginPatterns);
 
         //허용하는 HTTP METHOD 지정
