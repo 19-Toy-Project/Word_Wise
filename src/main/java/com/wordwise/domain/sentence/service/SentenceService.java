@@ -12,10 +12,7 @@ import com.wordwise.domain.sentence.repository.SentenceRepository;
 import com.wordwise.domain.sentence.repository.WishRepository;
 import com.wordwise.domain.sentence.request.EtriApiRequest;
 import com.wordwise.domain.sentence.request.PapagoApiRequest;
-import com.wordwise.domain.sentence.response.EtriApiResponse;
-import com.wordwise.domain.sentence.response.PapagoApiResponse;
-import com.wordwise.domain.sentence.response.SaveSentenceScoreResponse;
-import com.wordwise.domain.sentence.response.WordsApiResponse;
+import com.wordwise.domain.sentence.response.*;
 import com.wordwise.domain.user.entity.User;
 import com.wordwise.domain.user.repository.UserRepository;
 import com.wordwise.domain.word.entity.Word;
@@ -86,6 +83,21 @@ public class SentenceService {
         }
     }
 
+
+    //영어 문장 조회
+    public GetSentenceDetailResponse getSentenceDetail(Long sentenceId){
+        //문장 가져오기
+        Sentence sentence = sentenceRepository.findById(sentenceId).orElseThrow(() ->
+                new ApiException(ErrorStatus._NOT_FOUND_SENTENCE));
+
+        return GetSentenceDetailResponse.of(
+                sentence.getId(),
+                sentence.getSentence_kr(),
+                sentence.getSentence_en()
+        );
+
+    }
+
     //영어 문장 찜
     @Transactional
     public void saveWish(AuthUser authUser, Long sentenceId, String state) {
@@ -150,15 +162,18 @@ public class SentenceService {
             log.info("etriScore={}",etriApiResponse.getReturn_object().getScore());
             Long getScore = (long) (Double.parseDouble(etriApiResponse.getReturn_object().getScore())*20);
 
+            log.info("getScore={}",getScore);
             //사용자 가져오기
             User user = userRepository.findById(authUser.getId()).orElseThrow(() ->
                     new ApiException((ErrorStatus._USER_NOT_FOUND)));
 
             Score score = scoreRepository.findByUserAndType(user, sentence.getWord().getType());
 
+            log.info("score={}",score);
             //점수 없으면 초기 저장
             if (score == null) {
                 Score newScore = Score.of(sentence.getWord().getType(), getScore, 1L, BigDecimal.valueOf(getScore), user);
+                log.info("newScore={}",newScore);
                 scoreRepository.save(newScore);
             } else {
                 //점수 업데이트

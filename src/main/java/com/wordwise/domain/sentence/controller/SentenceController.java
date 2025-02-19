@@ -2,6 +2,7 @@ package com.wordwise.domain.sentence.controller;
 
 import com.wordwise.common.apipayload.ApiResponse;
 import com.wordwise.domain.auth.AuthUser;
+import com.wordwise.domain.sentence.response.GetSentenceDetailResponse;
 import com.wordwise.domain.sentence.response.SaveSentenceScoreResponse;
 import com.wordwise.domain.sentence.service.SentenceService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,14 @@ public class SentenceController {
     public ApiResponse<Void> saveSentence() {
         sentenceService.saveSentence();
         return ApiResponse.success();
+    }
+
+    //문장 조회
+    @GetMapping("/v1/sentences/get/{sentenceId}")
+    public ApiResponse<GetSentenceDetailResponse> getSentenceDetail(
+            @PathVariable Long sentenceId
+    ){
+        return ApiResponse.ok(sentenceService.getSentenceDetail(sentenceId));
     }
 
     //문장 찜 & 해제
