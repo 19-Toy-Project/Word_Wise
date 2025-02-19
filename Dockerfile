@@ -7,7 +7,13 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 COPY . .
-RUN ./gradlew build --no-daemon
-COPY build/libs/*.jar app.jar
 
+# 실행 권한 추가
+RUN chmod +x gradlew
+
+# Gradle 빌드 실행
+RUN ./gradlew build --no-daemon
+
+# JAR 복사 및 실행
+COPY build/libs/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
