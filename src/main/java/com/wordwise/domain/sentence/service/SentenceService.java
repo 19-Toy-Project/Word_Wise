@@ -1,5 +1,7 @@
 package com.wordwise.domain.sentence.service;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.wordwise.common.apipayload.status.ErrorStatus;
 import com.wordwise.common.exception.ApiException;
 import com.wordwise.common.utils.FileUtil;
@@ -41,6 +43,7 @@ public class SentenceService {
     private final UserRepository userRepository;
     private final ScoreRepository scoreRepository;
     private final WishRepository wishRepository;
+    private final Gson gson=new Gson();
 
     @Value("${rapid.client.key}")
     private String rapidClientKey;
@@ -159,12 +162,15 @@ public class SentenceService {
             EtriApiRequest.Argument argument = EtriApiRequest.Argument.of("english", sentence.getSentence_en(), base64Data);
             EtriApiRequest request = EtriApiRequest.of(argument);
             log.info("request={}",request);
-            EtriApiResponse etriApiResponse = etriApiClient.getPronunciationScore(etriClientKey, request);
 
+            //String -> Json으로 직접 파싱
+            String etriApiResponse = etriApiClient.getPronunciationScore(etriClientKey, request);
+            JsonObject jsonObject=gson.fromJson(etriApiResponse, JsonObject.class);
+            JsonObject returnObject=jsonObject.getAsJsonObject("return_object");
 
             //발음 점수 객체 생성 및 저장 (2자리수, 반올림)
-            log.info("etriScore={}",etriApiResponse.getReturn_object().getScore());
-            Long getScore = (long) (Double.parseDouble(etriApiResponse.getReturn_object().getScore())*20);
+            log.info("etriScore={}",returnObject.get("score").getAsString());
+            Long getScore = (long) (Double.parseDouble(returnObject.get("score").getAsString())*20);
 
             log.info("getScore={}",getScore);
             //사용자 가져오기

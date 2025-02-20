@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 public interface EtriApiClient {
 
     @PostMapping("/WiseASR/Pronunciation")
-    EtriApiResponse getPronunciationScore(
+    String getPronunciationScore(
             @RequestHeader("Authorization") String clientKey,
             @RequestBody EtriApiRequest request
     );
