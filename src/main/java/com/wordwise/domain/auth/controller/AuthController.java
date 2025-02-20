@@ -89,6 +89,7 @@ public class AuthController {
         log.info("Refresh token: {}", refreshToken);
 
         if(refreshToken == null){
+            log.info("************ Refresh Token is null *************");
             return ApiResponse.ok("************ Refresh Token is null *************");
         }
         return ApiResponse.ok(authService.refreshAccessToken(refreshToken));

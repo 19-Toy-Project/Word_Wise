@@ -47,6 +47,9 @@ public class CorsConfig {
 //        configuration.setAllowedHeaders(Collections.singletonList("*"));
 //        configuration.setAllowedHeaders(List.of(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE));
 
+        // 클라이언트가 `Set-Cookie`를 읽을 수 있도록 설정
+        configuration.setExposedHeaders(List.of("Authorization", "Set-Cookie"));
+
         // 모든 경로에 대해 CORS 설정 적용
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
