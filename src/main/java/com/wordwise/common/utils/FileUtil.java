@@ -57,6 +57,7 @@ public class FileUtil {
                .setAudioSampleRate(16000) //16kHz로 변환
                .done();
 
+       log.info("builder={}",builder);
        //실행
         FFmpegExecutor executor=new FFmpegExecutor(ffmpeg,ffprobe);
         executor.createJob(builder).run();
