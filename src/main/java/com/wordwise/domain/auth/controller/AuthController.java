@@ -53,18 +53,20 @@ public class AuthController {
         LoginResponse loginResponse = kakaoService.kakaoLogin(code);
         log.info("loginResponse: {}",loginResponse.toString());
 
-        log.info("response header : {}", response.getHeader(HttpHeaders.SET_COOKIE));
+        log.info("response header before : {}", response.getHeader(HttpHeaders.SET_COOKIE));
 
-//        // ✅ RefreshToken을 쿠키에 저장
-//        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", loginResponse.getRefreshToken())
-//                .httpOnly(true)   // JavaScript에서 접근 불가
-//                .secure(true)     // HTTPS 환경에서만 사용
-//                .sameSite("None") // CORS 환경에서 사용 가능
-//                .path("/")        // 모든 API에서 쿠키 사용 가능
-//                .maxAge(Duration.ofDays(7)) // 7일간 유지
-//                .build();
-//
-//        log.info("refreshTokenCookie: {}",refreshTokenCookie);
+        // ✅ RefreshToken을 쿠키에 저장
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", loginResponse.getRefreshToken())
+                .httpOnly(true)   // JavaScript에서 접근 불가
+                .secure(true)     // HTTPS 환경에서만 사용
+                .sameSite("None") // CORS 환경에서 사용 가능
+                .path("/")        // 모든 API에서 쿠키 사용 가능
+                .maxAge(Duration.ofDays(7)) // 7일간 유지
+                .build();
+
+        log.info("refreshTokenCookie: {}",refreshTokenCookie);
+
+        log.info("response header after : {}", response.getHeader(HttpHeaders.SET_COOKIE));
 //
 //        response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
 
