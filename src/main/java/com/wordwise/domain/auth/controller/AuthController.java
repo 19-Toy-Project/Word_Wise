@@ -59,14 +59,20 @@ public class AuthController {
 
         log.info("response header before : {}", response.getHeader(HttpHeaders.SET_COOKIE));
 
-        // RefreshToken을 쿠키에 저장
-        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", loginResponse.getRefreshToken())
-                .httpOnly(true)   // JavaScript에서 접근 불가
-                .secure(!isLocal)     // HTTPS 환경에서만 사용
-                .sameSite("None") // CORS 환경에서 사용 가능
-                .path("/")        // 모든 API에서 쿠키 사용 가능
-                .maxAge(Duration.ofDays(7)) // 7일간 유지
-                .build();
+        ResponseCookie refreshTokenCookie = null;
+        try{
+            // RefreshToken을 쿠키에 저장
+            refreshTokenCookie = ResponseCookie.from("refreshToken", loginResponse.getRefreshToken())
+                    .httpOnly(true)   // JavaScript에서 접근 불가
+                    .secure(!isLocal)     // HTTPS 환경에서만 사용
+                    .sameSite("None") // CORS 환경에서 사용 가능
+                    .path("/")        // 모든 API에서 쿠키 사용 가능
+                    .maxAge(Duration.ofDays(7)) // 7일간 유지
+                    .build();
+        }catch (Exception e){
+            log.error("response cookie error : {}", e.getMessage());
+        }
+        
 
         // `Set-Cookie` 추가 시 예외 발생 여부 확인
         try {
