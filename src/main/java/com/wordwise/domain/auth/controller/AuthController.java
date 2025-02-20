@@ -47,6 +47,7 @@ public class AuthController {
             @RequestBody LoginRequest code,
             HttpServletResponse response
     ) throws JsonProcessingException {
+        log.info("login api 호출");
         // code: 카카오 서버로부터 받은 인가 코드 Service 전달 후 인증 처리 및 JWT 반환
         // 로그인 수행 (JWT 발급)
         LoginResponse loginResponse = kakaoService.kakaoLogin(code);
