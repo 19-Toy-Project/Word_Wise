@@ -161,7 +161,7 @@ public class SentenceService {
             log.info("request={}",request);
             EtriApiResponse etriApiResponse = etriApiClient.getPronunciationScore(etriClientKey, request);
 
-            
+
             //발음 점수 객체 생성 및 저장 (2자리수, 반올림)
             log.info("etriScore={}",etriApiResponse.getReturn_object().getScore());
             Long getScore = (long) (Double.parseDouble(etriApiResponse.getReturn_object().getScore())*20);

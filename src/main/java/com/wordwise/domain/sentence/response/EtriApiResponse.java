@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class EtriApiResponse {
+    private final String request_id;
     private final Long result;
     private final String return_type;
     private final ReturnObject return_object;
