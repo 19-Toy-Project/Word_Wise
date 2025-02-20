@@ -149,7 +149,8 @@ public class SentenceService {
 
             //녹음 파일 16KHz로 변환
             File convertedFile=FileUtil.convertTo16kHz(file);
-            log.info("convertedFile={}",convertedFile.getAbsoluteFile());
+            log.info("convertedFile path={}",convertedFile.getAbsoluteFile());
+            log.info("convertedFile size={}",convertedFile.length());
             log.info("sentenceId={}",sentenceId);
 
             //녹음 파일 base64로 인코딩
