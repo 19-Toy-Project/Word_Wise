@@ -147,17 +147,21 @@ public class SentenceService {
             //녹음 파일 16KHz로 변환
             File convertedFile=FileUtil.convertTo16kHz(file);
             log.info("convertedFile={}",convertedFile.getAbsoluteFile());
+            log.info("sentenceId={}",sentenceId);
 
             //녹음 파일 base64로 인코딩
             String base64Data = FileUtil.encodeFileToBase64(convertedFile);
 
+            log.info("base64Data={}",base64Data);
             convertedFile.delete(); //16KHz로 변환된 파일 삭제
 
             //Etri 발음 API 호출
             EtriApiRequest.Argument argument = EtriApiRequest.Argument.of("english", sentence.getSentence_en(), base64Data);
             EtriApiRequest request = EtriApiRequest.of(argument);
+            log.info("request={}",request);
             EtriApiResponse etriApiResponse = etriApiClient.getPronunciationScore(etriClientKey, request);
 
+            
             //발음 점수 객체 생성 및 저장 (2자리수, 반올림)
             log.info("etriScore={}",etriApiResponse.getReturn_object().getScore());
             Long getScore = (long) (Double.parseDouble(etriApiResponse.getReturn_object().getScore())*20);
