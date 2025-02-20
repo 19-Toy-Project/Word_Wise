@@ -8,6 +8,7 @@ import com.wordwise.domain.auth.request.LoginRequest;
 import com.wordwise.domain.auth.response.LoginResponse;
 import com.wordwise.domain.auth.service.AuthService;
 import com.wordwise.domain.auth.service.KakaoService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +46,8 @@ public class AuthController {
     @PreAuthorize("permitAll()")
     public ApiResponse<LoginResponse> login(
             @RequestBody LoginRequest code,
-            HttpServletResponse response
+            HttpServletResponse response,
+            HttpServletRequest request
     ) throws JsonProcessingException {
         log.info("login api 호출");
         // code: 카카오 서버로부터 받은 인가 코드 Service 전달 후 인증 처리 및 JWT 반환
@@ -53,20 +55,26 @@ public class AuthController {
         LoginResponse loginResponse = kakaoService.kakaoLogin(code);
         log.info("loginResponse: {}",loginResponse.toString());
 
+        boolean isLocal = request.getServerName().equals("localhost");
+
         log.info("response header before : {}", response.getHeader(HttpHeaders.SET_COOKIE));
 
-        // ✅ RefreshToken을 쿠키에 저장
+        // RefreshToken을 쿠키에 저장
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", loginResponse.getRefreshToken())
                 .httpOnly(true)   // JavaScript에서 접근 불가
-                .secure(true)     // HTTPS 환경에서만 사용
+                .secure(!isLocal)     // HTTPS 환경에서만 사용
                 .sameSite("None") // CORS 환경에서 사용 가능
                 .path("/")        // 모든 API에서 쿠키 사용 가능
                 .maxAge(Duration.ofDays(7)) // 7일간 유지
                 .build();
 
-        log.info("refreshTokenCookie: {}",refreshTokenCookie);
-
-        log.info("response header after : {}", response.getHeader(HttpHeaders.SET_COOKIE));
+        // `Set-Cookie` 추가 시 예외 발생 여부 확인
+        try {
+            response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
+            log.info("🚀 Set-Cookie 설정 완료: {}", refreshTokenCookie);
+        } catch (Exception e) {
+            log.error("🚨 Set-Cookie 설정 중 오류 발생", e);
+        }
 //
 //        response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
 
