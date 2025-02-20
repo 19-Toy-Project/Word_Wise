@@ -11,10 +11,14 @@ import com.wordwise.domain.auth.service.KakaoService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.Duration;
 
 @Slf4j
 @RestController
@@ -44,7 +48,21 @@ public class AuthController {
             HttpServletResponse response
     ) throws JsonProcessingException {
         // code: 카카오 서버로부터 받은 인가 코드 Service 전달 후 인증 처리 및 JWT 반환
-        return ApiResponse.ok(kakaoService.kakaoLogin(code));
+        // 로그인 수행 (JWT 발급)
+        LoginResponse loginResponse = kakaoService.kakaoLogin(code);
+
+        // ✅ RefreshToken을 쿠키에 저장
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", loginResponse.getRefreshToken())
+                .httpOnly(true)   // JavaScript에서 접근 불가
+                .secure(true)     // HTTPS 환경에서만 사용
+                .sameSite("None") // CORS 환경에서 사용 가능
+                .path("/")        // 모든 API에서 쿠키 사용 가능
+                .maxAge(Duration.ofDays(7)) // 7일간 유지
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
+
+        return ApiResponse.ok(loginResponse);
     }
 
 //    // 로그아웃
@@ -69,6 +87,10 @@ public class AuthController {
             @CookieValue("refreshToken") String refreshToken
     ){
         log.info("Refresh token: {}", refreshToken);
+
+        if(refreshToken == null){
+            return ApiResponse.ok("************ Refresh Token is null *************");
+        }
         return ApiResponse.ok(authService.refreshAccessToken(refreshToken));
     }
 

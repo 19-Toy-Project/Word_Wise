@@ -68,14 +68,6 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
                 }
 
             } catch (SecurityException | MalformedJwtException e) {
-                // Refresh Token 발급 요청일 경우 API 정상 동작
-                if(requestURI.equals("/api/v1/auth/token")){
-                    log.info("AccessToken 재발급 API 요청 : securityException ***");
-                    chain.doFilter(httpRequest, httpResponse);
-                    httpRequest.setAttribute("exception", "EXPIRED_TOKEN");
-                    return;
-                }
-
                 log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.", e);
                 httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "유효하지 않는 JWT 서명입니다.");
             } catch (ExpiredJwtException e) {
