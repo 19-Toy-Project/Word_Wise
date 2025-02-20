@@ -50,6 +50,7 @@ public class AuthController {
         // code: 카카오 서버로부터 받은 인가 코드 Service 전달 후 인증 처리 및 JWT 반환
         // 로그인 수행 (JWT 발급)
         LoginResponse loginResponse = kakaoService.kakaoLogin(code);
+        log.info("loginResponse: {}",loginResponse.toString());
 
         // ✅ RefreshToken을 쿠키에 저장
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", loginResponse.getRefreshToken())
@@ -59,6 +60,8 @@ public class AuthController {
                 .path("/")        // 모든 API에서 쿠키 사용 가능
                 .maxAge(Duration.ofDays(7)) // 7일간 유지
                 .build();
+
+        log.info("refreshTokenCookie: {}",refreshTokenCookie);
 
         response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
 
