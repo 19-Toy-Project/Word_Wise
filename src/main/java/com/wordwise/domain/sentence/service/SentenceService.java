@@ -157,7 +157,7 @@ public class SentenceService {
             String base64Data = FileUtil.encodeFileToBase64(convertedFile);
 
             log.info("base64Data={}",base64Data);
-            convertedFile.delete(); //16KHz로 변환된 파일 삭제
+            //convertedFile.delete(); //16KHz로 변환된 파일 삭제
 
             //Etri 발음 API 호출
             EtriApiRequest.Argument argument = EtriApiRequest.Argument.of("english", sentence.getSentence_en(), base64Data);
