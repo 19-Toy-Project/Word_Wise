@@ -32,7 +32,7 @@ public class FileUtil {
         if (file.getSize() > size) {
             throw new ApiException(ErrorStatus._FILE_SIZE_EXCEEDED);
         }
-        if(!file.getContentType().equalsIgnoreCase("audio/wav")){
+        if((!file.getContentType().equalsIgnoreCase("audio/wav"))&&(!file.getContentType().equalsIgnoreCase("audio/wave"))){
             throw new ApiException(ErrorStatus._UNSUPPORTED_FILE_TYPE);
         }
     }
