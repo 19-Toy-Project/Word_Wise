@@ -42,7 +42,7 @@ public class WordService {
 
         return words.map(word -> GetWordListResponse.of(
                 word.getId(),
-                word.getWord_en(),
+                word.getWordEn(),
                 //단어 리스트 변환
                 word.getWord_krs().stream()
                         .map(wordKr -> WordKrResponse.of(wordKr.getWord_kr()))
@@ -71,6 +71,6 @@ public class WordService {
                         authUser == null ? null : wishRepository.existsBySentenceIdAndUserId(sentence.getId(), authUser.getId())
                 )).collect(Collectors.toList());
 
-        return GetWordDetailResponse.of(word.getWord_en(), wordKrResponses, sentenceResponses);
+        return GetWordDetailResponse.of(word.getWordEn(), wordKrResponses, sentenceResponses);
     }
 }

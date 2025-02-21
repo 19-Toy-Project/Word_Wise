@@ -9,6 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface WordRepository extends JpaRepository<Word,Long> {
     Page<Word> findAll(Pageable pageable);
-
+    Page<Word> findByWordEnIgnoreCase(String word, PageRequest pageable);
     Page<Word> findByType(WordType type, PageRequest pageable);
 }

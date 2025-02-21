@@ -65,7 +65,7 @@ public class SentenceService {
 
         //각 단어를 WordsAPI 호출
         for (Word word : words) {
-            WordsApiResponse response = wordsApiClient.getSentences(rapidClientKey, word.getWord_en());
+            WordsApiResponse response = wordsApiClient.getSentences(rapidClientKey, word.getWordEn());
 
             //예문 리스트 응답 데이터 (예문 개수 제한 없음)
             List<String> sentences = response.getExamples();

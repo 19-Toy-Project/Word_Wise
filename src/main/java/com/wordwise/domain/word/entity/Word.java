@@ -17,8 +17,8 @@ public class Word extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 255, nullable = false)
-    private String word_en;
+    @Column(name="word_en",length = 255, nullable = false)
+    private String wordEn;
 
     @Enumerated(EnumType.ORDINAL)
     private WordType type;
@@ -29,9 +29,9 @@ public class Word extends Timestamped {
     @OneToMany(mappedBy = "word", cascade = CascadeType.REMOVE)
     private List<Sentence> sentences;
 
-    private Word(Long id, String word_en, WordType type) {
+    private Word(Long id, String wordEn, WordType type) {
         this.id = id;
-        this.word_en = word_en;
+        this.wordEn = wordEn;
         this.type = type;
     }
 
