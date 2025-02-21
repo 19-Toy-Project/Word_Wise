@@ -82,22 +82,7 @@ public class SentenceService {
 
         }
     }
-
-
-    //영어 문장 조회
-    public GetSentenceDetailResponse getSentenceDetail(Long sentenceId){
-        //문장 가져오기
-        Sentence sentence = sentenceRepository.findById(sentenceId).orElseThrow(() ->
-                new ApiException(ErrorStatus._NOT_FOUND_SENTENCE));
-
-        return GetSentenceDetailResponse.of(
-                sentence.getId(),
-                sentence.getSentence_kr(),
-                sentence.getSentence_en()
-        );
-
-    }
-
+    
     //영어 문장 찜
     @Transactional
     public void saveWish(AuthUser authUser, Long sentenceId, String state) {
