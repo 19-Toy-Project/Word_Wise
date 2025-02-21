@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 @FeignClient(name = "etriPronunciationApi", url = "http://aiopen.etri.re.kr:8000")
 public interface EtriApiClient {
 
-    @PostMapping(value = "/WiseASR/Pronunciation", consumes = "application/json")
-    String getPronunciationScore(
+    @PostMapping("/WiseASR/Pronunciation")
+    EtriApiResponse getPronunciationScore(
             @RequestHeader("Authorization") String clientKey,
             @RequestBody EtriApiRequest request
     );

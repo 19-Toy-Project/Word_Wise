@@ -1,7 +1,5 @@
 package com.wordwise.domain.sentence.service;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.wordwise.common.apipayload.status.ErrorStatus;
 import com.wordwise.common.exception.ApiException;
 import com.wordwise.common.utils.FileUtil;
@@ -43,7 +41,6 @@ public class SentenceService {
     private final UserRepository userRepository;
     private final ScoreRepository scoreRepository;
     private final WishRepository wishRepository;
-    private final Gson gson=new Gson();
 
     @Value("${rapid.client.key}")
     private String rapidClientKey;
@@ -137,7 +134,7 @@ public class SentenceService {
 
     //영어 문장 점수 저장
     @Transactional
-    public SaveSentenceScoreResponse saveSentenceScore(AuthUser authUser,Long sentenceId, MultipartFile file) {
+    public SaveSentenceScoreResponse saveSentenceScore(AuthUser authUser, Long sentenceId, MultipartFile file) {
 
         try {
             //파일 유효한지 확인
@@ -149,42 +146,31 @@ public class SentenceService {
 
             //녹음 파일 16KHz로 변환
             File convertedFile=FileUtil.convertTo16kHz(file);
-            log.info("convertedFile path={}",convertedFile.getAbsoluteFile());
-            log.info("convertedFile size={}",convertedFile.length());
-            log.info("sentenceId={}",sentenceId);
+            log.info("convertedFile={}",convertedFile.getAbsoluteFile());
 
             //녹음 파일 base64로 인코딩
             String base64Data = FileUtil.encodeFileToBase64(convertedFile);
 
-            log.info("base64Data={}",base64Data);
-            //convertedFile.delete(); //16KHz로 변환된 파일 삭제
+            convertedFile.delete(); //16KHz로 변환된 파일 삭제
 
             //Etri 발음 API 호출
             EtriApiRequest.Argument argument = EtriApiRequest.Argument.of("english", sentence.getSentence_en(), base64Data);
             EtriApiRequest request = EtriApiRequest.of(argument);
-            log.info("request={}",request);
-
-            //String -> Json으로 직접 파싱
-            String etriApiResponse = etriApiClient.getPronunciationScore(etriClientKey, request);
-            JsonObject jsonObject=gson.fromJson(etriApiResponse, JsonObject.class);
-            JsonObject returnObject=jsonObject.getAsJsonObject("return_object");
+            EtriApiResponse etriApiResponse = etriApiClient.getPronunciationScore(etriClientKey, request);
 
             //발음 점수 객체 생성 및 저장 (2자리수, 반올림)
-            log.info("etriScore={}",returnObject.get("score").getAsString());
-            Long getScore = (long) (Double.parseDouble(returnObject.get("score").getAsString())*20);
+            log.info("etriScore={}",etriApiResponse.getReturn_object().getScore());
+            Long getScore = (long) (Double.parseDouble(etriApiResponse.getReturn_object().getScore())*20);
 
-            log.info("getScore={}",getScore);
             //사용자 가져오기
             User user = userRepository.findById(authUser.getId()).orElseThrow(() ->
                     new ApiException((ErrorStatus._USER_NOT_FOUND)));
 
             Score score = scoreRepository.findByUserAndType(user, sentence.getWord().getType());
 
-            log.info("score={}",score);
             //점수 없으면 초기 저장
             if (score == null) {
                 Score newScore = Score.of(sentence.getWord().getType(), getScore, 1L, BigDecimal.valueOf(getScore), user);
-                log.info("newScore={}",newScore);
                 scoreRepository.save(newScore);
             } else {
                 //점수 업데이트
