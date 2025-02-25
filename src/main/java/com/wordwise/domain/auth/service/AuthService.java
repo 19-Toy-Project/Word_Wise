@@ -66,7 +66,7 @@ public class AuthService {
     public String refreshAccessToken(String refreshToken) {
 
         String decodedToken = URLDecoder.decode(refreshToken, StandardCharsets.UTF_8);
-        decodedToken = decodedToken.replace("+ ", "");
+        decodedToken = decodedToken.replace("+", " ");
         log.info("Decoded Refresh token: " + decodedToken);
 
         // 토큰에서 사용자 정보 추출
