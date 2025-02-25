@@ -13,6 +13,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -63,8 +65,12 @@ public class AuthService {
     // Refresh Token으로 Access Token 발급
     public String refreshAccessToken(String refreshToken) {
 
+        String decodedToken = URLDecoder.decode(refreshToken, StandardCharsets.UTF_8);
+        decodedToken = decodedToken.replace("+ ", "");
+        log.info("Decoded Refresh token: " + decodedToken);
+
         // 토큰에서 사용자 정보 추출
-        Claims claims = jwtUtil.extractClaims(refreshToken);
+        Claims claims = jwtUtil.extractClaims(decodedToken);
         Long userId = Long.valueOf(claims.getSubject());
 
         RefreshToken storedToken = refreshTokenRepository.findByUserId(userId)
@@ -73,7 +79,7 @@ public class AuthService {
         log.info("Refresh token 1 : {} ", storedToken);
         log.info("Refresh token 2 : {} ", storedToken.getRefreshToken());
 
-        String storedRefreshToken = storedToken.getRefreshToken().split("Bearer+")[1];
+        String storedRefreshToken = storedToken.getRefreshToken().split("Bearer ")[1];
         // 저장된 Refresh Token이랑 동일한지 확인
         if(!storedRefreshToken.equals(refreshToken)) {
             throw new ApiException(ErrorStatus._MISMATCHED_REFRESH_TOKEN);
