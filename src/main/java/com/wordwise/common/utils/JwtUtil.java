@@ -70,10 +70,11 @@ public class JwtUtil {
 
     // 토큰에서 사용자 정보 추출
     public Claims extractClaims(String token) {
+        String jwtToken = substringToken(token);
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
-                .parseClaimsJws(token)
+                .parseClaimsJws(jwtToken)
                 .getBody();
     }
 
