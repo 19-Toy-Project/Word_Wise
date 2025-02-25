@@ -19,6 +19,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Base64;
 
@@ -63,7 +65,7 @@ public class AuthController {
         ResponseCookie refreshTokenCookie = null;
         try{
             // RefreshToken을 쿠키에 저장
-            refreshTokenCookie = ResponseCookie.from("refreshToken", Base64.getEncoder().encodeToString(loginResponse.getRefreshToken().getBytes()))
+            refreshTokenCookie = ResponseCookie.from("refreshToken", URLEncoder.encode(loginResponse.getRefreshToken(), StandardCharsets.UTF_8))
                     .httpOnly(true)   // JavaScript에서 접근 불가
                     .secure(!isLocal)     // HTTPS 환경에서만 사용
                     .sameSite("None") // CORS 환경에서 사용 가능
