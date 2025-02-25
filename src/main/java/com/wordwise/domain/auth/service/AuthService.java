@@ -73,7 +73,7 @@ public class AuthService {
         log.info("Refresh token 1 : {} ", storedToken);
         log.info("Refresh token 2 : {} ", storedToken.getRefreshToken());
 
-        String storedRefreshToken = storedToken.getRefreshToken().split("Bearer ")[1];
+        String storedRefreshToken = storedToken.getRefreshToken().split("Bearer+")[1];
         // 저장된 Refresh Token이랑 동일한지 확인
         if(!storedRefreshToken.equals(refreshToken)) {
             throw new ApiException(ErrorStatus._MISMATCHED_REFRESH_TOKEN);
