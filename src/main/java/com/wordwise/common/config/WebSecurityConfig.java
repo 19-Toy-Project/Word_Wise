@@ -29,6 +29,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .cors(cors -> cors.configurationSource(CorsConfig.corsConfigurationSource()))   // CORS 설정 적용
                 .csrf(csrf -> csrf.disable())  // CSRF 비활성화
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -56,7 +57,6 @@ public class WebSecurityConfig {
                         .hasAuthority(UserRole.Authority.ADMIN)
                         .anyRequest().authenticated()
                 )
-                .cors(cors -> cors.configurationSource(CorsConfig.corsConfigurationSource()))   // CORS 설정 적용
                 .build();
     }
 }
