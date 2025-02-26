@@ -20,9 +20,11 @@ public class SearchService {
     public Page<GetSearchWordListResponse> getSearchWordList(String keyword,int page,int size){
         Pageable pageable=PageRequest.of(page-1,size);
 
-        String searchKeyword="%"+keyword+"%";
-        Page<Word> words=wordRepository.findByWordOrderByASC(keyword, searchKeyword,pageable);
-
+        long startTime = System.nanoTime(); // 검색 시작 시간 기록
+        Page<Word> words=wordRepository.findByWordEnOrderByASC(keyword,pageable);
+        long endTime = System.nanoTime(); // 검색 종료 시간 기록
+        long duration = (endTime - startTime) / 1_000_000; // 밀리초 변환
+        System.out.println("검색 소요 시간: " + duration + "ms");
         return words.map(word -> GetSearchWordListResponse.of(
                 word.getId(),
                 word.getWordEn(),

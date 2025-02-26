@@ -16,11 +16,11 @@ public interface WordRepository extends JpaRepository<Word,Long> {
 
     @Query(
         "SELECT w FROM Word w "+
-                "WHERE w.wordEn LIKE :searchWord "+
+                "WHERE w.wordEn LIKE CONCAT(:keyword, '%') "+
                 "ORDER BY "+
                 "CASE WHEN w.wordEn =:keyword THEN 1 ELSE 2 END, "+
                 "w.wordEn ASC"
     )
-    Page<Word> findByWordOrderByASC(@Param("keyword") String keyword, @Param("searchWord") String searchWord, Pageable pageable);
+    Page<Word> findByWordEnOrderByASC(@Param("keyword") String keyword, Pageable pageable);
     Page<Word> findByType(WordType type, PageRequest pageable);
 }
