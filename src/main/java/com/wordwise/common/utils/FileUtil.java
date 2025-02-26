@@ -32,7 +32,7 @@ public class FileUtil {
         if (file.getSize() > size) {
             throw new ApiException(ErrorStatus._FILE_SIZE_EXCEEDED);
         }
-        if(!file.getContentType().equalsIgnoreCase("audio/wave")){
+        if((!file.getContentType().equalsIgnoreCase("audio/wav"))&&(!file.getContentType().equalsIgnoreCase("audio/wave"))){
             throw new ApiException(ErrorStatus._UNSUPPORTED_FILE_TYPE);
         }
     }
@@ -46,8 +46,8 @@ public class FileUtil {
         File outputFile=File.createTempFile("output",".wav");
 
         //FFmpeg 실행 객체 생성
-       FFmpeg ffmpeg=new FFmpeg(new File("src/main/resources/ffmpeg/ffmpeg.exe").getAbsolutePath());
-       FFprobe ffprobe=new FFprobe(new File("src/main/resources/ffmpeg/ffprobe.exe").getAbsolutePath());
+        FFmpeg ffmpeg=new FFmpeg(new File("src/main/resources/ffmpeg/ffmpeg.exe").getAbsolutePath());
+        FFprobe ffprobe=new FFprobe(new File("src/main/resources/ffmpeg/ffprobe.exe").getAbsolutePath());
 
        //FFmpeg 객체 변환
        FFmpegBuilder builder=new FFmpegBuilder()
@@ -65,5 +65,6 @@ public class FileUtil {
 
         return outputFile;
     }
+
 
 }

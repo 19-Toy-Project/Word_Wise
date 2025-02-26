@@ -30,7 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 
 @Slf4j
@@ -66,7 +65,7 @@ public class SentenceService {
 
         //각 단어를 WordsAPI 호출
         for (Word word : words) {
-            WordsApiResponse response = wordsApiClient.getSentences(rapidClientKey, word.getWord_en());
+            WordsApiResponse response = wordsApiClient.getSentences(rapidClientKey, word.getWordEn());
 
             //예문 리스트 응답 데이터 (예문 개수 제한 없음)
             List<String> sentences = response.getExamples();
@@ -123,7 +122,7 @@ public class SentenceService {
 
     //영어 문장 점수 저장
     @Transactional
-    public SaveSentenceScoreResponse saveSentenceScore(AuthUser authUser, Long sentenceId, MultipartFile file) {
+    public SaveSentenceScoreResponse saveSentenceScore(AuthUser authUser,Long sentenceId, MultipartFile file) {
 
         try {
             //파일 유효한지 확인
