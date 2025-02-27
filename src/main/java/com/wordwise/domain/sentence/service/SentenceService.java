@@ -4,6 +4,9 @@ import com.wordwise.common.apipayload.status.ErrorStatus;
 import com.wordwise.common.exception.ApiException;
 import com.wordwise.common.utils.FileUtil;
 import com.wordwise.domain.auth.AuthUser;
+import com.wordwise.domain.score.entity.SentenceScore;
+import com.wordwise.domain.score.repository.SentenceScoreRepository;
+import com.wordwise.domain.score.service.DateTimeService;
 import com.wordwise.domain.sentence.entity.TotalScore;
 import com.wordwise.domain.sentence.entity.Sentence;
 import com.wordwise.domain.sentence.entity.Wish;
@@ -44,6 +47,7 @@ public class SentenceService {
     private final UserRepository userRepository;
     private final ScoreRepository scoreRepository;
     private final WishRepository wishRepository;
+    private final SentenceScoreRepository sentenceScoreRepository;
 
     @Value("${rapid.client.key}")
     private String rapidClientKey;
@@ -156,7 +160,7 @@ public class SentenceService {
 
             TotalScore totalScore = scoreRepository.findByUserAndType(user, sentence.getWord().getType());
 
-            //점수 없으면 초기 저장
+            //점수 없으면 초기 저장 : 레벨별 문장 점수
             if (totalScore == null) {
                 TotalScore newTotalScore = TotalScore.of(sentence.getWord().getType(), getScore, 1L, BigDecimal.valueOf(getScore), user);
                 scoreRepository.save(newTotalScore);
@@ -164,6 +168,22 @@ public class SentenceService {
                 //점수 업데이트
                 totalScore.updateScore(getScore);
             }
+
+            // 최신 문장 점수 데이터 조회
+            SentenceScore latestSentenceScore = sentenceScoreRepository.findLatestSentence(user.getId(),sentence.getId());
+
+            if(latestSentenceScore == null){
+                // 문장 점수 저장
+                SentenceScore sentenceScore = SentenceScore.of(getScore, sentence, user);
+                sentenceScoreRepository.save(sentenceScore);
+            }else if(DateTimeService.isSameDay(latestSentenceScore.getModifiedAt())){
+                latestSentenceScore.updateScore(getScore);
+            }else{
+                // 문장 점수 저장
+                SentenceScore newSentenceScore = SentenceScore.of(getScore, sentence, user);
+                sentenceScoreRepository.save(newSentenceScore);
+            }
+
             return SaveSentenceScoreResponse.of(getScore);
 
         } catch (IOException e) {

@@ -40,4 +40,10 @@ public class SentenceScore extends Timestamped {
         return new SentenceScore(score, sentence, user);
     }
 
+    public void updateScore(Long score) {
+        this.score = score;
+    }
+
+
+
 }
