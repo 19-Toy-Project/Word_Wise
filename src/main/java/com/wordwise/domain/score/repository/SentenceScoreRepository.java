@@ -23,7 +23,7 @@ public interface SentenceScoreRepository extends JpaRepository<SentenceScore, Lo
     @Query("SELECT DISTINCT DATE(s.createdAt) FROM SentenceScore s " +
             "WHERE s.user.id = :userId AND s.createdAt BETWEEN :startDate AND :endDate " +
             "ORDER BY DATE(s.createdAt) ASC")
-    List<LocalDate> findStudyDate(
+    List<String> findStudyDate(
             @Param("userId") Long id,
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate

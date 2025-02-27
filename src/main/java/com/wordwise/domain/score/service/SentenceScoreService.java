@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,13 +24,15 @@ public class SentenceScoreService {
         LocalDateTime startDate = yearMonth.atDay(1).atStartOfDay();    // 해당 월의 1일 00:00:00
         LocalDateTime endDate = yearMonth.atEndOfMonth().atTime(23,59,59);  // 해당 월의 마지막 날 23:59:59
 
-        List<LocalDate> userStudyDate = sentenceScoreRepository.findStudyDate(authUser.getId(), startDate, endDate);
+        List<String> userStudyDate = sentenceScoreRepository.findStudyDate(authUser.getId(), startDate, endDate);
 
         // 데이터가 없을 경우 빈 리스트 반환 (null 방지)
         if(userStudyDate.isEmpty()) {
             return List.of(); // 빈 리스트 반환
         }
 
-        return userStudyDate;
+        return userStudyDate.stream()
+                .map(LocalDate::parse)
+                .collect(Collectors.toList());
     }
 }
