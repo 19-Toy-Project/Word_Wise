@@ -17,6 +17,7 @@ import java.math.RoundingMode;
 public class Score {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "total_score_id")
     private Long id;
 
     @Enumerated(EnumType.ORDINAL)
