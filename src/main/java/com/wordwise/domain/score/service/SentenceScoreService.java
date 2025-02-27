@@ -1,7 +1,6 @@
 package com.wordwise.domain.score.service;
 
 import com.wordwise.domain.auth.AuthUser;
-import com.wordwise.domain.mypage.response.UserStudyDateListResponse;
 import com.wordwise.domain.score.repository.SentenceScoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,7 +9,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

@@ -3,7 +3,6 @@ package com.wordwise.domain.mypage.controller;
 import com.wordwise.common.apipayload.ApiResponse;
 import com.wordwise.domain.auth.AuthUser;
 import com.wordwise.domain.mypage.response.UserAverageScoreResponse;
-import com.wordwise.domain.mypage.response.UserStudyDateListResponse;
 import com.wordwise.domain.mypage.response.UserWishSentenceListResponse;
 import com.wordwise.domain.mypage.service.MyPageService;
 import com.wordwise.domain.score.service.SentenceScoreService;
