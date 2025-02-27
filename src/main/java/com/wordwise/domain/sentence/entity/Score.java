@@ -12,7 +12,7 @@ import java.math.RoundingMode;
 
 @Entity
 @Getter
-@Table(name = "sentence_score")
+@Table(name = "sentence_total_score")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Score {
     @Id
