@@ -11,7 +11,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class DateTimeService {
 
-    public boolean isSameDay(LocalDateTime dateTime) {
+    public static boolean isSameDay(LocalDateTime dateTime) {
         return LocalDate.now().isEqual(dateTime.toLocalDate());
     }
 }
