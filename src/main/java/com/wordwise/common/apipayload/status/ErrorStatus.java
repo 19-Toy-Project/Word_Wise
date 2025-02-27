@@ -42,6 +42,7 @@ public enum ErrorStatus implements BaseCode {
 
     // score
     _DOES_NOT_EXIST_SCORE_DATA(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(), "점수 데이터가 존재하지 않습니다."),
+    _NOT_FOUND_LATEST_SENTENCE_SCORE(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(), "최신 문장 점수를 찾지 못했습니다."),
 
     // common
     _INVALID_REQUEST(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(), "잘못된 요청입니다."),
