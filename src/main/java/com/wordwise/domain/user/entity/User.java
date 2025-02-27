@@ -17,16 +17,16 @@ public class User extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="user_id")
+    @Column(name = "user_id")
     private Long id;
 
-    @Column(name="kakao_id")
+    @Column(name = "kakao_id")
     private Long kakaoId;
 
-    @Column(name="user_name")
+    @Column(name = "user_name")
     private String name;
 
-    @Column(name="user_email")
+    @Column(name = "user_email")
     private String email;
 
     @Enumerated(EnumType.STRING)
@@ -56,7 +56,7 @@ public class User extends Timestamped {
             Long kakaoId,
             String name,
             String email
-    ){
+    ) {
         return new User(kakaoId, name, email);
     }
 

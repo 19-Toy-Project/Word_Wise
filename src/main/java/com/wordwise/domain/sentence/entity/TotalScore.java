@@ -12,11 +12,12 @@ import java.math.RoundingMode;
 
 @Entity
 @Getter
-@Table(name = "sentence_score")
+@Table(name = "sentence_total_score")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Score {
+public class TotalScore {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "total_score_id")
     private Long id;
 
     @Enumerated(EnumType.ORDINAL)
@@ -35,7 +36,7 @@ public class Score {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    private Score(WordType type, Long total_score, Long total_count, BigDecimal average, User user) {
+    private TotalScore(WordType type, Long total_score, Long total_count, BigDecimal average, User user) {
         this.type = type;
         this.total_score = total_score;
         this.total_count = total_count;
@@ -43,8 +44,8 @@ public class Score {
         this.user = user;
     }
 
-    public static Score of(WordType type, Long total_score, Long total_count, BigDecimal average, User user) {
-        return new Score(type, total_score, total_count, average, user);
+    public static TotalScore of(WordType type, Long total_score, Long total_count, BigDecimal average, User user) {
+        return new TotalScore(type, total_score, total_count, average, user);
     }
 
     public void updateScore(Long score) {
