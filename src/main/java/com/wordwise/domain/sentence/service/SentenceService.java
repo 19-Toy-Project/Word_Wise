@@ -4,7 +4,7 @@ import com.wordwise.common.apipayload.status.ErrorStatus;
 import com.wordwise.common.exception.ApiException;
 import com.wordwise.common.utils.FileUtil;
 import com.wordwise.domain.auth.AuthUser;
-import com.wordwise.domain.sentence.entity.Score;
+import com.wordwise.domain.sentence.entity.TotalScore;
 import com.wordwise.domain.sentence.entity.Sentence;
 import com.wordwise.domain.sentence.entity.Wish;
 import com.wordwise.domain.sentence.repository.ScoreRepository;
@@ -154,15 +154,15 @@ public class SentenceService {
             User user = userRepository.findById(authUser.getId()).orElseThrow(() ->
                     new ApiException((ErrorStatus._USER_NOT_FOUND)));
 
-            Score score = scoreRepository.findByUserAndType(user, sentence.getWord().getType());
+            TotalScore totalScore = scoreRepository.findByUserAndType(user, sentence.getWord().getType());
 
             //점수 없으면 초기 저장
-            if (score == null) {
-                Score newScore = Score.of(sentence.getWord().getType(), getScore, 1L, BigDecimal.valueOf(getScore), user);
-                scoreRepository.save(newScore);
+            if (totalScore == null) {
+                TotalScore newTotalScore = TotalScore.of(sentence.getWord().getType(), getScore, 1L, BigDecimal.valueOf(getScore), user);
+                scoreRepository.save(newTotalScore);
             } else {
                 //점수 업데이트
-                score.updateScore(getScore);
+                totalScore.updateScore(getScore);
             }
             return SaveSentenceScoreResponse.of(getScore);
 

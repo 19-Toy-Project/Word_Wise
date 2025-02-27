@@ -7,7 +7,7 @@ import com.wordwise.domain.mypage.dto.UserAverageScoreDto;
 import com.wordwise.domain.mypage.dto.UserWishSentenceDto;
 import com.wordwise.domain.mypage.response.UserAverageScoreResponse;
 import com.wordwise.domain.mypage.response.UserWishSentenceListResponse;
-import com.wordwise.domain.sentence.entity.Score;
+import com.wordwise.domain.sentence.entity.TotalScore;
 import com.wordwise.domain.sentence.repository.ScoreRepository;
 import com.wordwise.domain.sentence.repository.WishRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +30,9 @@ public class MyPageService {
     // 사용자 학습 평균 점수 조회
     public UserAverageScoreResponse getUserAverageScore(AuthUser authUser) {
         // 사용자 Score 객체 가져오기
-        List<Score> userScore = scoreRepository.findByUserIdOrderByType(authUser.getId());
+        List<TotalScore> userTotalScore = scoreRepository.findByUserIdOrderByType(authUser.getId());
 
-        List<UserAverageScoreDto> content = userScore.stream().map(s -> UserAverageScoreDto.of(
+        List<UserAverageScoreDto> content = userTotalScore.stream().map(s -> UserAverageScoreDto.of(
                 s.getType(),
                 s.getTotal_score(),
                 s.getTotal_count(),
