@@ -19,7 +19,7 @@ public class SentenceScoreService {
     private final SentenceScoreRepository sentenceScoreRepository;
 
 
-    public List<UserStudyDateListResponse> getUserStudyDateList(AuthUser authUser, int year, int month) {
+    public List<LocalDate> getUserStudyDateList(AuthUser authUser, int year, int month) {
         // 해당 년월의 시작일과 마지막일 계산
         YearMonth yearMonth = YearMonth.of(year, month);
         LocalDateTime startDate = yearMonth.atDay(1).atStartOfDay();    // 해당 월의 1일 00:00:00
@@ -32,6 +32,6 @@ public class SentenceScoreService {
             return List.of(); // 빈 리스트 반환
         }
 
-        return userStudyDate.stream().map(UserStudyDateListResponse::of).collect(Collectors.toList());
+        return userStudyDate;
     }
 }

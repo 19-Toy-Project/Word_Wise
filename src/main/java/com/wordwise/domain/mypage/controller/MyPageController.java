@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -45,7 +46,7 @@ public class MyPageController {
 
     // 사용자가 학습한 날짜 조회
     @GetMapping("/v2/users/calendar")
-    public ApiResponse<List<UserStudyDateListResponse>> getUserStudyDateList(
+    public ApiResponse<List<LocalDate>> getUserStudyDateList(
             @AuthenticationPrincipal AuthUser authUser,
             @RequestParam int year,
             @RequestParam int month
