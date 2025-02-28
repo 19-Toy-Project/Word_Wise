@@ -1,7 +1,9 @@
 package com.wordwise.domain.score.service;
 
 import com.wordwise.domain.auth.AuthUser;
+import com.wordwise.domain.mypage.response.UserLearnedSentenceCountResponse;
 import com.wordwise.domain.score.repository.SentenceScoreRepository;
+import com.wordwise.domain.sentence.repository.SentenceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 public class SentenceScoreService {
 
     private final SentenceScoreRepository sentenceScoreRepository;
+    private final SentenceRepository sentenceRepository;
 
 
     public List<LocalDate> getUserStudyDateList(AuthUser authUser, int year, int month) {
@@ -34,5 +37,14 @@ public class SentenceScoreService {
         return userStudyDate.stream()
                 .map(LocalDate::parse)
                 .collect(Collectors.toList());
+    }
+
+    public UserLearnedSentenceCountResponse getUserLearnedSentenceCount(AuthUser authUser) {
+
+        Long totalSentenceCount = sentenceRepository.count();
+
+        Long studySentenceCount = sentenceScoreRepository.countUserLearnedSentence(authUser.getId());
+
+        return UserLearnedSentenceCountResponse.of(totalSentenceCount, studySentenceCount);
     }
 }
