@@ -15,10 +15,10 @@ public interface WordRepository extends JpaRepository<Word,Long> {
     Page<Word> findAll(Pageable pageable);
 
     @Query(
-        "SELECT w FROM Word w "+
-                "WHERE w.wordEn LIKE CONCAT(:keyword, '%') "+
-                "ORDER BY "+
-                "CASE WHEN w.wordEn =:keyword THEN 1 ELSE 2 END, "+
+        "SELECT w FROM Word w " +
+                "WHERE w.wordEn LIKE CONCAT('%', :keyword, '%') " +
+                "ORDER BY " +
+                "(CASE WHEN w.wordEn = :keyword THEN 0 WHEN w.wordEn LIKE CONCAT(:keyword, '%') THEN 1 ELSE 2 END), " +
                 "w.wordEn ASC"
     )
     Page<Word> findByWordEnOrderByASC(@Param("keyword") String keyword, Pageable pageable);

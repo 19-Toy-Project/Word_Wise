@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name="word" ,indexes = @Index(name="idx_word_en",columnList = "word_en"))
+//@Table(name="word" ,indexes = @Index(name="idx_word_en",columnList = "word_en"))
 public class Word extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
