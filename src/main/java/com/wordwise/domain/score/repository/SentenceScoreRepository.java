@@ -28,4 +28,8 @@ public interface SentenceScoreRepository extends JpaRepository<SentenceScore, Lo
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate
     );
+
+    @Query("SELECT COUNT(DISTINCT s.sentence.id) FROM SentenceScore s " +
+            "WHERE s.user.id = :userId")
+    Long countUserLearnedSentence(@Param("userId") Long id);
 }

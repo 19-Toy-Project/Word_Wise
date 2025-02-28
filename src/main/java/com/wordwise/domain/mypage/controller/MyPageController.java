@@ -3,6 +3,7 @@ package com.wordwise.domain.mypage.controller;
 import com.wordwise.common.apipayload.ApiResponse;
 import com.wordwise.domain.auth.AuthUser;
 import com.wordwise.domain.mypage.response.UserAverageScoreResponse;
+import com.wordwise.domain.mypage.response.UserLearnedSentenceCountResponse;
 import com.wordwise.domain.mypage.response.UserWishSentenceListResponse;
 import com.wordwise.domain.mypage.service.MyPageService;
 import com.wordwise.domain.score.service.SentenceScoreService;
@@ -51,6 +52,14 @@ public class MyPageController {
             @RequestParam int month
     ){
         return ApiResponse.ok(sentenceScoreService.getUserStudyDateList(authUser, year, month));
+    }
+
+    // 사용자가 학습한 문장 총 개수 조회
+    @GetMapping("/v2/users/learned-sentences/count")
+    public ApiResponse<UserLearnedSentenceCountResponse> getUserLearnedSentenceCount(
+            @AuthenticationPrincipal AuthUser authUser
+    ){
+        return ApiResponse.ok(sentenceScoreService.getUserLearnedSentenceCount(authUser));
     }
 
 
