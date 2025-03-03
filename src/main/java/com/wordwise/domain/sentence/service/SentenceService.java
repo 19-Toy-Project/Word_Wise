@@ -4,7 +4,10 @@ import com.wordwise.common.apipayload.status.ErrorStatus;
 import com.wordwise.common.exception.ApiException;
 import com.wordwise.common.utils.FileUtil;
 import com.wordwise.domain.auth.AuthUser;
-import com.wordwise.domain.sentence.entity.Score;
+import com.wordwise.domain.score.entity.SentenceScore;
+import com.wordwise.domain.score.repository.SentenceScoreRepository;
+import com.wordwise.domain.score.service.DateTimeService;
+import com.wordwise.domain.sentence.entity.TotalScore;
 import com.wordwise.domain.sentence.entity.Sentence;
 import com.wordwise.domain.sentence.entity.Wish;
 import com.wordwise.domain.sentence.repository.ScoreRepository;
@@ -41,6 +44,7 @@ public class SentenceService {
     private final UserRepository userRepository;
     private final ScoreRepository scoreRepository;
     private final WishRepository wishRepository;
+    private final SentenceScoreRepository sentenceScoreRepository;
 
     @Value("${rapid.client.key}")
     private String rapidClientKey;
@@ -62,7 +66,7 @@ public class SentenceService {
 
         //각 단어를 WordsAPI 호출
         for (Word word : words) {
-            WordsApiResponse response = wordsApiClient.getSentences(rapidClientKey, word.getWord_en());
+            WordsApiResponse response = wordsApiClient.getSentences(rapidClientKey, word.getWordEn());
 
             //예문 리스트 응답 데이터 (예문 개수 제한 없음)
             List<String> sentences = response.getExamples();
@@ -151,16 +155,32 @@ public class SentenceService {
             User user = userRepository.findById(authUser.getId()).orElseThrow(() ->
                     new ApiException((ErrorStatus._USER_NOT_FOUND)));
 
-            Score score = scoreRepository.findByUserAndType(user, sentence.getWord().getType());
+            TotalScore totalScore = scoreRepository.findByUserAndType(user, sentence.getWord().getType());
 
-            //점수 없으면 초기 저장
-            if (score == null) {
-                Score newScore = Score.of(sentence.getWord().getType(), getScore, 1L, BigDecimal.valueOf(getScore), user);
-                scoreRepository.save(newScore);
+            //점수 없으면 초기 저장 : 레벨별 문장 점수
+            if (totalScore == null) {
+                TotalScore newTotalScore = TotalScore.of(sentence.getWord().getType(), getScore, 1L, BigDecimal.valueOf(getScore), user);
+                scoreRepository.save(newTotalScore);
             } else {
                 //점수 업데이트
-                score.updateScore(getScore);
+                totalScore.updateScore(getScore);
             }
+
+            // 최신 문장 점수 데이터 조회
+            SentenceScore latestSentenceScore = sentenceScoreRepository.findLatestSentence(user.getId(),sentence.getId());
+
+            if(latestSentenceScore == null){
+                // 문장 점수 저장
+                SentenceScore sentenceScore = SentenceScore.of(getScore, sentence, user);
+                sentenceScoreRepository.save(sentenceScore);
+            }else if(DateTimeService.isSameDay(latestSentenceScore.getModifiedAt())){
+                latestSentenceScore.updateScore(getScore);
+            }else{
+                // 문장 점수 저장
+                SentenceScore newSentenceScore = SentenceScore.of(getScore, sentence, user);
+                sentenceScoreRepository.save(newSentenceScore);
+            }
+
             return SaveSentenceScoreResponse.of(getScore);
 
         } catch (IOException e) {
